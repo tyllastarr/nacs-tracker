@@ -6,6 +6,7 @@ namespace nacs_tracker
     {
         private int id;
         private string name;
+        private char position;
         private int hp;
         private int charge;
         private Action charAction;
@@ -20,6 +21,11 @@ namespace nacs_tracker
         {
             get { return name; }
             set { name = value; }
+        }
+        public char Position
+        {
+            get { return position; }
+            set { position = value; }
         }
         public int Hp
         {
