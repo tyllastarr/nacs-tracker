@@ -13,6 +13,9 @@ namespace nacs_tracker
         private Action charAction;
         private int target;
 
+        public const char emptyHeart = '♡';
+        public const char fullHeart = '♥';
+
         public int Id
         {
             get { return id; }
