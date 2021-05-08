@@ -8,6 +8,7 @@ namespace nacs_tracker
         private string name;
         private char position;
         private int hp;
+        private int maxHp;
         private int charge;
         private Action charAction;
         private int target;
@@ -31,6 +32,10 @@ namespace nacs_tracker
         {
             get { return hp; }
             set { hp = value; }
+        }
+        public int MaxHp {
+            get {return maxHp;}
+            set {maxHp = value;}
         }
         public int Charge
         {
