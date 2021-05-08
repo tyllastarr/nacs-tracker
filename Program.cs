@@ -6,26 +6,32 @@ namespace nacs_tracker
     class Program
     {
         static List<Character> charList;
-        static int length;
-        static Character AddCharacter(int id, string name, char position, int hp) {
+        static int nameLength;
+        static int healthLength;
+        static Character AddCharacter(int id, string name, char position, int hp, int maxHp) {
             Character newChar = new Character();
             newChar.Id = id;
             newChar.Name = name;
-            if(name.Length > length) {length = name.Length;}
+            if(name.Length > nameLength) {nameLength = name.Length;}
             newChar.Position = position;
             newChar.Hp = hp;
+            newChar.MaxHp = maxHp;
+            if(maxHp > healthLength) {healthLength = maxHp;}
             return newChar;
         }
-        static Character AddCharacter(int id, string name, int hp) {
+        static Character AddCharacter(int id, string name, int hp, int maxHp) {
             Character newChar = new Character();
             newChar.Id = id;
             newChar.Name = name;
+            if(name.Length > nameLength) {nameLength = name.Length;}
             newChar.Hp = hp;
+            newChar.MaxHp = maxHp;
+            if(maxHp > healthLength) {healthLength = maxHp;}
             return newChar;
         }
         static string PrintDivider() {
             string divider = "+--+";
-            for(int i = 0; i < length; i++) {divider = divider + "-";}
+            for(int i = 0; i < nameLength; i++) {divider = divider + "-";}
             divider = divider + "+---+--+---+------+---+";
             return divider;
         }
@@ -42,7 +48,7 @@ namespace nacs_tracker
             }
 
             // Print name
-            numSpaces = length;
+            numSpaces = nameLength;
             numChars = printChar.Name.Length;
             output = output + printChar.Name;
             for(int i = numChars; i < numSpaces; i++) {
@@ -124,7 +130,8 @@ namespace nacs_tracker
         }
         static void Main(string[] args)
         {
-            length = 0;
+            nameLength = 0;
+            healthLength = 0;
             Console.WriteLine("Hello World!");
         }
     }
