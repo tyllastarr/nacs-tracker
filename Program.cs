@@ -30,47 +30,57 @@ namespace nacs_tracker
             return newChar;
         }
         static string PrintDivider() {
-            string divider = "+--+";
-            for(int i = 0; i < nameLength; i++) {divider = divider + "-";}
-            divider = divider + "+---+--+---+------+---+";
+            string divider = "+--+--------------------+---+--------------------+---+------+---+";
             return divider;
         }
         static string PrintCharacter(Character printChar) {
-            string output = "+";
+            string output = "|";
             int numChars;
             int numSpaces;
 
             // Print ID
             if(printChar.Id < 10) {
-                output = output + " " + printChar.Id + "+";
+                output = output + " " + printChar.Id + "|";
             } else {
-                output = output + printChar.Id + "+";
+                output = output + printChar.Id + "|";
             }
 
             // Print name
-            numSpaces = nameLength;
+            numSpaces = 20;
             numChars = printChar.Name.Length;
+            if(numChars <= 20) {
             output = output + printChar.Name;
+        } else {
+            numChars = 20;
+            output = output + printChar.Name.Substring(0, 20);
+        }
             for(int i = numChars; i < numSpaces; i++) {
                 output = output + " ";
             }
-            output = output + "+";
+            output = output + "|";
 
             // Print position
-            output = output + " " + printChar.Position + " +";
+            output = output + " " + printChar.Position + " |";
 
             // Print HP
-            if(printChar.Hp < 10) {
-                output = output + " " + printChar.Hp + "+";
-            } else {
-                output = output + printChar.Hp + "+";
+            int hpCounter;
+                for(hpCounter = 1; hpCounter <= printChar.Hp; hpCounter++) {
+                    output = output + Character.fullHeart;
+                }
+                for(/*Keeping the value from last time*/; hpCounter <= printChar.MaxHp; hpCounter++) {
+                    output = output + Character.emptyHeart;
+                }
+                for(/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++) {
+                    output = output + " ";
+                }
+                output = output + "|";
             }
 
             // Print charge
             if(printChar.Charge < 10) {
-                output = output + "  " + printChar.Charge + "+";
+                output = output + "  " + printChar.Charge + "|";
             } else {
-                output = output + " " + printChar.Charge + "+";
+                output = output + " " + printChar.Charge + "|";
             }
 
             // Print action
@@ -109,13 +119,13 @@ namespace nacs_tracker
             for(int i = numChars; i < numSpaces; i++) {
                 output = output + " ";
             }
-            output = output + "+";
+            output = output + "|";
 
             // Print target
             if(printChar.Target < 10) {
-                output = output + " " + printChar.Target + "+";
+                output = output + " " + printChar.Target + "|";
             } else {
-                output = output + printChar.Target + "+";
+                output = output + printChar.Target + "|";
             }
 
             return output;
@@ -125,7 +135,7 @@ namespace nacs_tracker
             Console.WriteLine(PrintDivider());
             foreach (Character item in charList)
             {
-                // Print character and divider
+                // TODO:Print character and divider
             }
         }
         static void Main(string[] args)
