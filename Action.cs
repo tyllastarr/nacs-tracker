@@ -8,7 +8,8 @@ namespace nacs_tracker
         Heal,
         Boost,
         Revive,
-        Wait,
-        Charge
+        Charge,
+        None,
+        Dead
     }
 }

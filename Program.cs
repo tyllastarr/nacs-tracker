@@ -8,53 +8,64 @@ namespace nacs_tracker
         static List<Character> charList;
         static int nameLength;
         static int healthLength;
-        static Character AddCharacter(int id, string name, char position, int hp, int maxHp) {
+        static Character AddCharacter(int id, string name, char position, int hp, int maxHp)
+        {
             Character newChar = new Character();
             newChar.Id = id;
             newChar.Name = name;
-            if(name.Length > nameLength) {nameLength = name.Length;}
+            if (name.Length > nameLength) { nameLength = name.Length; }
             newChar.Position = position;
             newChar.Hp = hp;
             newChar.MaxHp = maxHp;
-            if(maxHp > healthLength) {healthLength = maxHp;}
+            if (maxHp > healthLength) { healthLength = maxHp; }
             return newChar;
         }
-        static Character AddCharacter(int id, string name, int hp, int maxHp) {
+        static Character AddCharacter(int id, string name, int hp, int maxHp)
+        {
             Character newChar = new Character();
             newChar.Id = id;
             newChar.Name = name;
-            if(name.Length > nameLength) {nameLength = name.Length;}
+            if (name.Length > nameLength) { nameLength = name.Length; }
             newChar.Hp = hp;
             newChar.MaxHp = maxHp;
-            if(maxHp > healthLength) {healthLength = maxHp;}
+            if (maxHp > healthLength) { healthLength = maxHp; }
             return newChar;
         }
-        static string PrintDivider() {
+        static string PrintDivider()
+        {
             string divider = "+--+--------------------+---+--------------------+---+------+---+";
             return divider;
         }
-        static string PrintCharacter(Character printChar) {
+        static string PrintCharacter(Character printChar)
+        {
             string output = "|";
             int numChars;
             int numSpaces;
 
             // Print ID
-            if(printChar.Id < 10) {
+            if (printChar.Id < 10)
+            {
                 output = output + " " + printChar.Id + "|";
-            } else {
+            }
+            else
+            {
                 output = output + printChar.Id + "|";
             }
 
             // Print name
             numSpaces = 20;
             numChars = printChar.Name.Length;
-            if(numChars <= 20) {
-            output = output + printChar.Name;
-        } else {
-            numChars = 20;
-            output = output + printChar.Name.Substring(0, 20);
-        }
-            for(int i = numChars; i < numSpaces; i++) {
+            if (numChars <= 20)
+            {
+                output = output + printChar.Name;
+            }
+            else
+            {
+                numChars = 20;
+                output = output + printChar.Name.Substring(0, 20);
+            }
+            for (int i = numChars; i < numSpaces; i++)
+            {
                 output = output + " ";
             }
             output = output + "|";
@@ -64,22 +75,28 @@ namespace nacs_tracker
 
             // Print HP
             int hpCounter;
-                for(hpCounter = 1; hpCounter <= printChar.Hp; hpCounter++) {
-                    output = output + Character.fullHeart;
-                }
-                for(/*Keeping the value from last time*/; hpCounter <= printChar.MaxHp; hpCounter++) {
-                    output = output + Character.emptyHeart;
-                }
-                for(/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++) {
-                    output = output + " ";
-                }
-                output = output + "|";
+            for (hpCounter = 1; hpCounter <= printChar.Hp; hpCounter++)
+            {
+                output = output + Character.fullHeart;
             }
+            for (/*Keeping the value from last time*/; hpCounter <= printChar.MaxHp; hpCounter++)
+            {
+                output = output + Character.emptyHeart;
+            }
+            for (/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++)
+            {
+                output = output + " ";
+            }
+            output = output + "|";
+
 
             // Print charge
-            if(printChar.Charge < 10) {
+            if (printChar.Charge < 10)
+            {
                 output = output + "  " + printChar.Charge + "|";
-            } else {
+            }
+            else
+            {
                 output = output + " " + printChar.Charge + "|";
             }
 
@@ -90,10 +107,6 @@ namespace nacs_tracker
                 case Action.Heal:
                     numChars = 4;
                     output = output + "Heal";
-                    break;
-                case Action.Wait:
-                    numChars = 4;
-                    output = output + "Wait";
                     break;
                 case Action.Boost:
                     numChars = 5;
@@ -115,23 +128,36 @@ namespace nacs_tracker
                     numChars = 6;
                     output = output + "Charge";
                     break;
+                case Action.None:
+                    numChars = 4;
+                    output = output + "None";
+                    break;
+                case Action.Dead:
+                    numChars = 4;
+                    output = output + "Dead";
+                    break;
             }
-            for(int i = numChars; i < numSpaces; i++) {
+            for (int i = numChars; i < numSpaces; i++)
+            {
                 output = output + " ";
             }
             output = output + "|";
 
             // Print target
-            if(printChar.Target < 10) {
+            if (printChar.Target < 10)
+            {
                 output = output + " " + printChar.Target + "|";
-            } else {
+            }
+            else
+            {
                 output = output + printChar.Target + "|";
             }
 
             return output;
 
         }
-        static void PrintTracker() {
+        static void PrintTracker()
+        {
             Console.WriteLine(PrintDivider());
             foreach (Character item in charList)
             {
