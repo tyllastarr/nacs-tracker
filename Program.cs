@@ -156,12 +156,48 @@ namespace nacs_tracker
             return output;
 
         }
+        static void Attack(Character origin, Character target)
+        {
+            int power = 1 + origin.Charge;
+            target.Damage(power);
+            origin.Charge = 0;
+        }
+        static void Defend(Character origin)
+        {
+            origin.Defense += 1 + origin.Charge;
+            origin.Charge = 0;
+        }
+        static void Heal(Character origin, Character target)
+        {
+            int power = 1 + origin.Charge;
+            target.Heal(power);
+            origin.Charge = 0;
+        }
+        static void Boost(Character origin, Character target)
+        {
+            int power = 1 + origin.Charge;
+            target.Charge += power;
+            origin.Charge = 0;
+        }
+        static void Revive(Character origin, Character target)
+        {
+            // TODO: Charged revive doesn't need a cooldown turn
+        }
+        static void Charge(Character origin)
+        {
+            origin.Charge++;
+        }
+        static void Overcharge(Character origin, int amount)
+        {
+            origin.Charge += amount;
+            origin.Damage(amount);
+        }
         static void PrintTracker()
         {
             Console.WriteLine(PrintDivider());
             foreach (Character item in charList)
             {
-                // TODO:Print character and divider
+                // TODO: Print character and divider
             }
         }
         static void Main(string[] args)
