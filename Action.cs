@@ -3,12 +3,13 @@ namespace nacs_tracker
 {
     enum Action
     {
-        Attack,
-        Defend,
-        Heal,
         Boost,
+        Heal,
         Revive,
-        Wait,
-        Charge
+        Defend,
+        Attack,
+        Charge,
+        None,
+        Dead
     }
 }
