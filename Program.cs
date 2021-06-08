@@ -175,10 +175,27 @@ namespace nacs_tracker
         }
         static void Boost(Character origin, Character target)
         {
-            // FIXME: Boost doesn't grant charge, but provides the effect of charge for the current turn.  Example: Tyll'a boosts Mona, Mona attacks, Mona does 2 damage instead of 1.
-            int power = 1 + origin.Charge;
-            target.Charge += power;
-            origin.Charge = 0;
+            int power;
+            switch (target.CharAction)
+            {
+                case Action.Attack:
+                    power = 1 + origin.Charge;
+                    target.Charge += power;
+                    origin.Charge = 0;
+                    break;
+                case Action.Defend:
+                    power = 1 + origin.Charge;
+                    target.Charge += power;
+                    origin.Charge = 0;
+                    break;
+                case Action.Heal:
+                    power = 1 + origin.Charge;
+                    target.Charge += power;
+                    origin.Charge = 0;
+                    break;
+                default:
+                    break;
+            }
         }
         static void Revive(Character origin, Character target)
         {
