@@ -10,6 +10,7 @@ namespace nacs_tracker
         Attack,
         Charge,
         None,
+        Cooldown,
         Dead
     }
 }

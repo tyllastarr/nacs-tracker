@@ -199,7 +199,14 @@ namespace nacs_tracker
         }
         static void Revive(Character origin, Character target)
         {
-            // TODO: Charged revive doesn't need a cooldown turn
+            target.CharAction = Action.None;
+            target.Heal();
+            if(origin.Charge <= 0) {
+                origin.CharAction = Action.Cooldown;
+            }
+            else if(origin.Charge > 1) {
+                target.Heal(origin.Charge - 1);
+            }
         }
         static void Charge(Character origin)
         {
