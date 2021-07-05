@@ -1,0 +1,5 @@
+CREATE TABLE [dbo].[Actions]
+(
+	[Id] INT NOT NULL PRIMARY KEY,
+	[Action] VARCHAR(8) NOT NULL
+)
