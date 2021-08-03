@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 
 namespace nacs_tracker
 {
@@ -8,6 +9,12 @@ namespace nacs_tracker
         static List<Character> charList;
         static int nameLength;
         static int healthLength;
+        static string connectionString = null;
+        static SqlConnection conn;
+        static SqlCommand command;
+        static SqlDataReader dataReader;
+        static string sql = null;
+
         static Character AddCharacter(int id, string name, char position, int hp, int maxHp)
         {
             Character newChar = new Character();
@@ -225,8 +232,33 @@ namespace nacs_tracker
                 // TODO: Print character and divider
             }
         }
+        static void ReadSql(string query)
+        {
+            connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            sql = query;
+            conn = new SqlConnection(connectionString);
+            try
+            {
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Console.WriteLine(dataReader.GetValue(0));
+                    Console.WriteLine(dataReader.GetValue(1));
+                }
+                dataReader.Close();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Database connection failed");
+            }
+        }
         static void Main(string[] args)
         {
+            ReadSql("SELECT * FROM Actions");
             nameLength = 0;
             healthLength = 0;
             Console.WriteLine("Hello World!");
