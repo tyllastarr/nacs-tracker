@@ -102,7 +102,7 @@ namespace nacs_tracker
 
             // Print action
             numSpaces = 6;
-            switch (printChar.CharAction)
+ /*           switch (printChar.CharAction)
             {
                 case Action.Heal:
                     numChars = 4;
@@ -136,7 +136,7 @@ namespace nacs_tracker
                     numChars = 4;
                     output = output + "Dead";
                     break;
-            }
+            } */
             for (int i = numChars; i < numSpaces; i++)
             {
                 output = output + " ";
@@ -176,7 +176,7 @@ namespace nacs_tracker
         static void Boost(Character origin, Character target)
         {
             int power;
-            switch (target.CharAction)
+    /*        switch (target.CharAction)
             {
                 case Action.Attack:
                     power = 1 + origin.Charge;
@@ -195,14 +195,14 @@ namespace nacs_tracker
                     break;
                 default:
                     break;
-            }
+            }*/
         }
         static void Revive(Character origin, Character target)
         {
-            target.CharAction = Action.None;
+ //           target.CharAction = Action.None;
             target.Heal();
             if(origin.Charge <= 0) {
-                origin.CharAction = Action.Cooldown;
+ //               origin.CharAction = Action.Cooldown;
             }
             else if(origin.Charge > 1) {
                 target.Heal(origin.Charge - 1);

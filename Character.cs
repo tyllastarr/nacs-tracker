@@ -70,7 +70,7 @@ namespace nacs_tracker
 
             if(amount >= hp) { // Attack kills target
                 hp = 0;
-                charAction = Action.Dead;
+ //               charAction = Action.Dead;
                 return;
             }
 
