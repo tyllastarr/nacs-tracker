@@ -9,34 +9,42 @@ namespace nacs_tracker
         static List<Character> charList;
         static int nameLength;
         static int healthLength;
-        static string connectionString = null;
-        static SqlConnection conn;
+        static string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        static SqlConnection conn = new SqlConnection(connectionString);
         static SqlCommand command;
         static SqlDataReader dataReader;
         static string sql = null;
 
-        static Character AddCharacter(int id, string name, char position, int hp, int maxHp)
+        static void AddCharacter(string name, char position, int hp, int maxHp)
         {
-            Character newChar = new Character();
-            newChar.Id = id;
-            newChar.Name = name;
-            if (name.Length > nameLength) { nameLength = name.Length; }
-            newChar.Position = position;
-            newChar.Hp = hp;
-            newChar.MaxHp = maxHp;
-            if (maxHp > healthLength) { healthLength = maxHp; }
-            return newChar;
+            sql = "INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('" + name + "', '" + position + "', " + hp + ", " + maxHp + ")";
+            try
+            {
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            } catch(Exception ex)
+            {
+                Console.WriteLine("Database connection failed");
+            }
         }
-        static Character AddCharacter(int id, string name, int hp, int maxHp)
+        static void AddCharacter(string name, int hp, int maxHp)
         {
-            Character newChar = new Character();
-            newChar.Id = id;
-            newChar.Name = name;
-            if (name.Length > nameLength) { nameLength = name.Length; }
-            newChar.Hp = hp;
-            newChar.MaxHp = maxHp;
-            if (maxHp > healthLength) { healthLength = maxHp; }
-            return newChar;
+            sql = "INSERT INTO Characters(Name, Hp, MaxHp) VALUES('" + name + "', " + hp + ", " + maxHp + ")";
+            try
+            {
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Database connection failed");
+            }
         }
         static string PrintDivider()
         {
@@ -232,16 +240,15 @@ namespace nacs_tracker
                 // TODO: Print character and divider
             }
         }
-        static void ReadSql(string query)
+/*        static void ReadSql(string query)
         {
-            connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             sql = query;
-            conn = new SqlConnection(connectionString);
             try
             {
                 conn.Open();
                 command = new SqlCommand(sql, conn);
                 dataReader = command.ExecuteReader();
+                Console.WriteLine(System.Environment.CurrentDirectory);
                 while (dataReader.Read())
                 {
                     Console.WriteLine(dataReader.GetValue(0));
@@ -251,17 +258,14 @@ namespace nacs_tracker
                 command.Dispose();
                 conn.Close();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 Console.WriteLine("Database connection failed");
             }
-        }
+        } */
         static void Main(string[] args)
         {
-            ReadSql("SELECT * FROM Actions");
-            nameLength = 0;
-            healthLength = 0;
-            Console.WriteLine("Hello World!");
+            // This method currently used for debugging
         }
     }
 }
