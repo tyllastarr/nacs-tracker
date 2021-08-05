@@ -17,7 +17,7 @@ namespace nacs_tracker
 
         static void AddCharacter(string name, char position, int hp, int maxHp)
         {
-            sql = "INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('" + name + "', '" + position + "', " + hp + ", " + maxHp + ")";
+            sql = $"INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('{name}', '{position}', {hp}, {maxHp})";
             try
             {
                 conn.Open();
@@ -32,7 +32,7 @@ namespace nacs_tracker
         }
         static void AddCharacter(string name, int hp, int maxHp)
         {
-            sql = "INSERT INTO Characters(Name, Hp, MaxHp) VALUES('" + name + "', " + hp + ", " + maxHp + ")";
+            sql = $"INSERT INTO Characters(Name, Hp, MaxHp) VALUES('{name}', {hp}, {maxHp})";
             try
             {
                 conn.Open();
