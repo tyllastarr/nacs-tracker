@@ -6,7 +6,6 @@ namespace nacs_tracker
 {
     class Program
     {
-        static List<Character> charList;
         static int nameLength;
         static int healthLength;
         static string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
@@ -20,6 +19,7 @@ namespace nacs_tracker
         static int targetChg;
         static string targetActionStr;
         static int targetActionInt;
+        static int count;
         const char emptyHeart = '♡';
         const char fullHeart = '♥';
 
@@ -60,116 +60,6 @@ namespace nacs_tracker
         {
             string divider = "+----+--------------------+---+--------------------+---+------+----+";
             return divider;
-        }
-        static string PrintCharacter(int printChar)
-        {
-            try
-            {
-                string output = "|";
-                int numChars;
-                int numSpaces;
-
-                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {printChar}";
-                conn.Open();
-                command = new SqlCommand(sql, conn);
-                dataReader = command.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    // Print ID
-                    if (Convert.ToInt32(dataReader.GetValue(0)) < 10)
-                    {
-                        output = $"{output}   {Convert.ToInt32(dataReader.GetValue(0))}|";
-                    }
-                    else if (Convert.ToInt32(dataReader.GetValue(0)) < 100)
-                    {
-                        output = $"{output}  {Convert.ToInt32(dataReader.GetValue(0))}|";
-                    }
-                    else if (Convert.ToInt32(dataReader.GetValue(0)) < 1000)
-                    {
-                        output = $"{output} {Convert.ToInt32(dataReader.GetValue(0))}|";
-                    }
-                    else
-                    {
-                        output = $"{output}{Convert.ToInt32(dataReader.GetValue(0))}|";
-                    }
-
-                    // Print name
-                    numSpaces = 20;
-                    numChars = Convert.ToString(dataReader.GetValue(1)).Length;
-                    if (numChars <= 20)
-                    {
-                        output = $"{output}{Convert.ToString(dataReader.GetValue(1))}";
-                    }
-                    else
-                    {
-                        numChars = 20;
-                        output = $"{output}{Convert.ToString(dataReader.GetValue(1)).Substring(0, 20)}";
-                    }
-                    for (int i = numChars; i < numSpaces; i++)
-                    {
-                        output = $"{output} ";
-                    }
-                    output = $"{output}|";
-
-                    // Print position
-                    output = $"{output} {Convert.ToString(dataReader.GetValue(2))} |";
-
-                    // Print HP
-                    int hpCounter;
-                    for (hpCounter = 1; hpCounter <= Convert.ToInt32(dataReader.GetValue(3)); hpCounter++)
-                    {
-                        output = $"{output}{fullHeart}";
-                    }
-                    for (/*Keeping the value from last time*/; hpCounter <= Convert.ToInt32(dataReader.GetValue(4)); hpCounter++)
-                    {
-                        output = $"{output}{emptyHeart}";
-                    }
-                    for (/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++)
-                    {
-                        output = $"{output} ";
-                    }
-                    output = $"{output}|";
-
-
-                    // Print charge
-                    if (Convert.ToInt32(dataReader.GetValue(5)) < 10)
-                    {
-                        output = $"output  {Convert.ToInt32(dataReader.GetValue(5))}|";
-                    }
-                    else
-                    {
-                        output = $"output {Convert.ToInt32(dataReader.GetValue(5))}|";
-                    }
-
-                    // Print action
-                    numSpaces = 6;
-                    numChars = Convert.ToString(dataReader.GetValue(10)).Length;
-                    output = $"{output}{Convert.ToString(dataReader.GetValue(10))}";
-                    for (int i = numChars; i < numSpaces; i++)
-                    {
-                        output = $"{output} ";
-                    }
-                    output = $"{output}|";
-
-                    // Print target
-                    if (Convert.ToInt32(dataReader.GetValue(8)) < 10)
-                    {
-                        output = $"{output} {Convert.ToInt32(dataReader.GetValue(8))}|";
-                    }
-                    else
-                    {
-                        output = $"{output}{Convert.ToInt32(dataReader.GetValue(8))}|";
-                    }
-
-                }
-
-                return output;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return null;
-            }
         }
         static void Attack(int origin, int target)
         {
@@ -499,34 +389,115 @@ namespace nacs_tracker
         static void PrintTracker()
         {
             Console.WriteLine(PrintDivider());
-            foreach (Character item in charList)
+
+            try
             {
-                // TODO: Print character and divider
+                string output = "|";
+                int numChars;
+                int numSpaces;
+
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    // Print ID
+                    if (Convert.ToInt32(dataReader.GetValue(0)) < 10)
+                    {
+                        output = $"{output}   {Convert.ToInt32(dataReader.GetValue(0))}|";
+                    }
+                    else if (Convert.ToInt32(dataReader.GetValue(0)) < 100)
+                    {
+                        output = $"{output}  {Convert.ToInt32(dataReader.GetValue(0))}|";
+                    }
+                    else if (Convert.ToInt32(dataReader.GetValue(0)) < 1000)
+                    {
+                        output = $"{output} {Convert.ToInt32(dataReader.GetValue(0))}|";
+                    }
+                    else
+                    {
+                        output = $"{output}{Convert.ToInt32(dataReader.GetValue(0))}|";
+                    }
+
+                    // Print name
+                    numSpaces = 20;
+                    numChars = Convert.ToString(dataReader.GetValue(1)).Length;
+                    if (numChars <= 20)
+                    {
+                        output = $"{output}{Convert.ToString(dataReader.GetValue(1))}";
+                    }
+                    else
+                    {
+                        numChars = 20;
+                        output = $"{output}{Convert.ToString(dataReader.GetValue(1)).Substring(0, 20)}";
+                    }
+                    for (int i = numChars; i < numSpaces; i++)
+                    {
+                        output = $"{output} ";
+                    }
+                    output = $"{output}|";
+
+                    // Print position
+                    output = $"{output} {Convert.ToString(dataReader.GetValue(2))} |";
+
+                    // Print HP
+                    int hpCounter;
+                    for (hpCounter = 1; hpCounter <= Convert.ToInt32(dataReader.GetValue(3)); hpCounter++)
+                    {
+                        output = $"{output}{fullHeart}";
+                    }
+                    for (/*Keeping the value from last time*/; hpCounter <= Convert.ToInt32(dataReader.GetValue(4)); hpCounter++)
+                    {
+                        output = $"{output}{emptyHeart}";
+                    }
+                    for (/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++)
+                    {
+                        output = $"{output} ";
+                    }
+                    output = $"{output}|";
+
+
+                    // Print charge
+                    if (Convert.ToInt32(dataReader.GetValue(5)) < 10)
+                    {
+                        output = $"output  {Convert.ToInt32(dataReader.GetValue(5))}|";
+                    }
+                    else
+                    {
+                        output = $"output {Convert.ToInt32(dataReader.GetValue(5))}|";
+                    }
+
+                    // Print action
+                    numSpaces = 6;
+                    numChars = Convert.ToString(dataReader.GetValue(10)).Length;
+                    output = $"{output}{Convert.ToString(dataReader.GetValue(10))}";
+                    for (int i = numChars; i < numSpaces; i++)
+                    {
+                        output = $"{output} ";
+                    }
+                    output = $"{output}|";
+
+                    // Print target
+                    if (Convert.ToInt32(dataReader.GetValue(8)) < 10)
+                    {
+                        output = $"{output} {Convert.ToInt32(dataReader.GetValue(8))}|";
+                    }
+                    else
+                    {
+                        output = $"{output}{Convert.ToInt32(dataReader.GetValue(8))}|";
+                    }
+
+                    Console.WriteLine(output);
+                    Console.WriteLine(PrintDivider());
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
-        /*        static void ReadSql(string query)
-                {
-                    sql = query;
-                    try
-                    {
-                        conn.Open();
-                        command = new SqlCommand(sql, conn);
-                        dataReader = command.ExecuteReader();
-                        Console.WriteLine(System.Environment.CurrentDirectory);
-                        while (dataReader.Read())
-                        {
-                            Console.WriteLine(dataReader.GetValue(0));
-                            Console.WriteLine(dataReader.GetValue(1));
-                        }
-                        dataReader.Close();
-                        command.Dispose();
-                        conn.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Database connection failed");
-                    }
-                } */
         static void Main(string[] args)
         {
             // This method currently used for debugging
