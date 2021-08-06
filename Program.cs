@@ -176,9 +176,7 @@ namespace nacs_tracker
         }
         static void Attack(int origin, int target)
         {
-            /*            int power = 1 + origin.Charge;
-                        target.Damage(power);
-                        origin.Charge = 0; */
+
             try
             {
                 sql = $"SELECT * FROM Characters WHERE Id = {origin}";
