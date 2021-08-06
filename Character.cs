@@ -1,3 +1,6 @@
+/// THIS CLASS IS DEPRECATED!
+/// Class will be deleted once all references are removed!
+
 using System;
 
 namespace nacs_tracker

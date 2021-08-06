@@ -16,7 +16,10 @@ namespace nacs_tracker
         static string sql = null;
         static int power;
         static int targetHp;
-
+        static int targetDef;
+        static int targetChg;
+        static string targetActionStr;
+        static int targetActionInt;
 
         static void AddCharacter(string name, char position, int hp, int maxHp)
         {
@@ -30,7 +33,7 @@ namespace nacs_tracker
                 conn.Close();
             } catch(Exception ex)
             {
-                Console.WriteLine("Database connection failed");
+                Console.WriteLine(ex);
             }
         }
         static void AddCharacter(string name, int hp, int maxHp)
@@ -46,7 +49,7 @@ namespace nacs_tracker
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Database connection failed");
+                Console.WriteLine(ex);
             }
         }
         static string PrintDivider()
@@ -217,64 +220,285 @@ namespace nacs_tracker
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Database connection failed");
+                Console.WriteLine(ex);
             }
 
         }
-        static void Defend(Character origin)
+        static void Defend(int origin)
         {
-            origin.Defense += 1 + origin.Charge;
-            origin.Charge = 0;
-        }
-        static void Heal(Character origin, Character target)
-        {
-            int power = 1 + origin.Charge;
-            target.Heal(power);
-            origin.Charge = 0;
-        }
-        static void Boost(Character origin, Character target)
-        {
-    /*        int power;
-            switch (target.CharAction)
+            try
             {
-                case Action.Attack:
-                    power = 1 + origin.Charge;
-                    target.Charge += power;
-                    origin.Charge = 0;
-                    break;
-                case Action.Defend:
-                    power = 1 + origin.Charge;
-                    target.Charge += power;
-                    origin.Charge = 0;
-                    break;
-                case Action.Heal:
-                    power = 1 + origin.Charge;
-                    target.Charge += power;
-                    origin.Charge = 0;
-                    break;
-                default:
-                    break;
-            }*/
-        }
-        static void Revive(Character origin, Character target)
-        {
- //           target.CharAction = Action.None;
-            target.Heal();
-            if(origin.Charge <= 0) {
- //               origin.CharAction = Action.Cooldown;
+                sql = $"SELECT * FROM Characters WHERE id = {origin}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while(dataReader.Read())
+                {
+                    power = Convert.ToInt32(dataReader.GetValue(5)) + 1;
+                    targetDef = Convert.ToInt32(dataReader.GetValue(6)) + power;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Defense = {targetDef}, Charge = 0 WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
             }
-            else if(origin.Charge > 1) {
-                target.Heal(origin.Charge - 1);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
             }
         }
-        static void Charge(Character origin)
+        static void Heal(int origin, int target)
         {
-            origin.Charge++;
+            try
+            {
+                sql = $"SELECT * FROM Characters WHERE Id = {origin}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while(dataReader.Read())
+                {
+                    power = Convert.ToInt32(dataReader.GetValue(5)) + 1;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"SELECT * FROM Characters WHERE Id = {target}";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    targetHp = Convert.ToInt32(dataReader.GetValue(3)) + power;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Hp = {targetHp} WHERE Id = {target}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Charge = 0 WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
-        static void Overcharge(Character origin, int amount)
+        static void Boost(int origin, int target)
         {
-            origin.Charge += amount;
-            origin.Damage(amount);
+            try
+            {
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while(dataReader.Read())
+                {
+                    targetActionStr = Convert.ToString(dataReader.GetValue(10));
+                    targetChg = Convert.ToInt32(dataReader.GetValue(5));
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                if (targetActionStr != "Attack" && targetActionStr != "Defend" && targetActionStr != "Heal") // Other actions cannot be boosted
+                {
+                    conn.Close();
+                    return;
+                }
+
+                sql = $"SELECT * FROM Characters WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    power = 1 + Convert.ToInt32(dataReader.GetValue(5)) + 1;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                targetChg += power;
+
+                sql = $"UPDATE Characters SET Charge = {targetChg} WHERE Id = {target}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Charge = 0 WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void Revive(int origin, int target)
+        {
+            try
+            {
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    targetActionStr = Convert.ToString(dataReader.GetValue(10));
+                    power = Convert.ToInt32(dataReader.GetValue(5));
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                if(targetActionStr != "Dead") // Can't revive someone who isn't dead
+                {
+                    conn.Close();
+                    return;
+                }
+
+                if (power <= 0) {
+                    sql = $"SELECT * FROM Actions WHERE Action = 'Cooldown'";
+                    command = new SqlCommand(sql, conn);
+                    dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        targetActionInt = Convert.ToInt32(dataReader.GetValue(0));
+                    }
+                    dataReader.Close();
+                    command.Dispose();
+
+                    sql = $"UPDATE Characters SET Action = {targetActionInt} WHERE Id = {origin}";
+                    command = new SqlCommand(sql, conn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+
+                    sql = $"SELECT * FROM Actions WHERE Action = 'None'";
+                    command = new SqlCommand(sql, conn);
+                    dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        targetActionInt = Convert.ToInt32(dataReader.GetValue(0));
+                    }
+                    dataReader.Close();
+                    command.Dispose();
+
+                    sql = $"UPDATE Characters SET Hp = 1, Action = {targetActionInt} WHERE Id = {target}";
+                    command = new SqlCommand(sql, conn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+                } else
+                {
+                    sql = $"SELECT * FROM Actions WHERE Action = 'None'";
+                    command = new SqlCommand(sql, conn);
+                    dataReader = command.ExecuteReader();
+                    while (dataReader.Read())
+                    {
+                        targetActionInt = Convert.ToInt32(dataReader.GetValue(0));
+                    }
+                    dataReader.Close();
+                    command.Dispose();
+
+                    sql = $"UPDATE Characters SET Hp = {power}, Action = {targetActionInt} WHERE Id = {target}";
+                    command = new SqlCommand(sql, conn);
+                    command.ExecuteNonQuery();
+                    command.Dispose();
+                }
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void Charge(int origin)
+        {
+            try
+            {
+                sql = $"SELECT * FROM Characters WHERE Id = {origin}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    power = Convert.ToInt32(dataReader.GetValue(5)) + 1;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Charge = {power} WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void Overcharge(int origin, int amount)
+        {
+/*            origin.Charge += amount;
+            origin.Damage(amount);*/
+            try
+            {
+                sql = $"SELECT * FROM Characters WHERE Id = {origin}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    power = Convert.ToInt32(dataReader.GetValue(5)) + amount + 1;
+                    targetHp = Convert.ToInt32(dataReader.GetValue(3)) - amount;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Charge = {power}, Hp = {targetHp} WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void CatchDead()
+        {
+            try
+            {
+                sql = $"SELECT * FROM Actions WHERE Action = 'Dead'";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    targetActionInt = Convert.ToInt32(dataReader.GetValue(0));
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Action = {targetActionInt}, Hp = 0 WHERE Hp <= 0";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
         static void PrintTracker()
         {
