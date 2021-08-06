@@ -210,6 +210,11 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+
+                sql = $"UPDATE Characters SET Charge = 0 WHERE Id = {origin}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
                 conn.Close();
             }
             catch (Exception ex)
