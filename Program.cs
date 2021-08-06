@@ -14,6 +14,9 @@ namespace nacs_tracker
         static SqlCommand command;
         static SqlDataReader dataReader;
         static string sql = null;
+        static int power;
+        static int targetHp;
+
 
         static void AddCharacter(string name, char position, int hp, int maxHp)
         {
@@ -171,11 +174,49 @@ namespace nacs_tracker
             return output;
 
         }
-        static void Attack(Character origin, Character target)
+        static void Attack(int origin, int target)
         {
-            int power = 1 + origin.Charge;
-            target.Damage(power);
-            origin.Charge = 0;
+            /*            int power = 1 + origin.Charge;
+                        target.Damage(power);
+                        origin.Charge = 0; */
+            try
+            {
+                sql = $"SELECT * FROM Characters WHERE Id = {origin}";
+                conn.Open();
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while(dataReader.Read())
+                {
+                    power = Convert.ToInt32(dataReader.GetValue(5)) + 1;
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"SELECT * FROM Characters WHERE Id = {target}";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while(dataReader.Read())
+                {
+                    targetHp = Convert.ToInt32(dataReader.GetValue(3)) - power;
+                    if(targetHp < 0)
+                    {
+                        targetHp = 0;
+                    }
+                }
+                dataReader.Close();
+                command.Dispose();
+
+                sql = $"UPDATE Characters SET Hp = {targetHp} WHERE Id = {target}";
+                command = new SqlCommand(sql, conn);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Database connection failed");
+            }
+
         }
         static void Defend(Character origin)
         {
@@ -190,8 +231,8 @@ namespace nacs_tracker
         }
         static void Boost(Character origin, Character target)
         {
-            int power;
-    /*        switch (target.CharAction)
+    /*        int power;
+            switch (target.CharAction)
             {
                 case Action.Attack:
                     power = 1 + origin.Charge;
