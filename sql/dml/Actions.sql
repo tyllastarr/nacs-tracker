@@ -1,10 +1,12 @@
-﻿INSERT INTO [dbo].[Actions] ([Action])
+﻿INSERT INTO Actions (Action)
 VALUES ('Boost'),
 ('Heal'),
 ('Revive'),
 ('Defend'),
 ('Attack'),
 ('Charge'),
+('Overcharge'),
 ('None'),
 ('Cooldown'),
-('Dead');
+('Dead'),
+('NPC');

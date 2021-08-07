@@ -58,7 +58,7 @@ namespace nacs_tracker
         }
         static string PrintDivider()
         {
-            string divider = "+----+--------------------+---+--------------------+---+------+----+";
+            string divider = "+----+--------------------+---+--------------------+---+----------+----+";
             return divider;
         }
         static void Attack(int origin, int target)
@@ -386,6 +386,107 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
+        static void PlayerActions()
+        {
+            try
+            {
+                conn.Open();
+
+                // Boost
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Boost'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    // Check for no target
+                    if(Convert.ToInt32(dataReader.GetValue(8)) != 0) // 0 refers to no target
+                    {
+                        Boost(Convert.ToInt32(dataReader.GetValue(0)), Convert.ToInt32(dataReader.GetValue(8)));
+                    }
+                }
+                command.Dispose();
+
+                // Revive
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Revive'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    // Check for no target
+                    if (Convert.ToInt32(dataReader.GetValue(8)) != 0) // 0 refers to no target
+                    {
+                        Revive(Convert.ToInt32(dataReader.GetValue(0)), Convert.ToInt32(dataReader.GetValue(8)));
+                    }
+                }
+                command.Dispose();
+
+                // Heal
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Heal'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    // Check for no target
+                    if (Convert.ToInt32(dataReader.GetValue(8)) != 0) // 0 refers to no target
+                    {
+                        Heal(Convert.ToInt32(dataReader.GetValue(0)), Convert.ToInt32(dataReader.GetValue(8)));
+                    }
+                }
+                command.Dispose();
+
+                // Defend
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Defend'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Defend(Convert.ToInt32(dataReader.GetValue(0)));
+                }
+                command.Dispose();
+
+                // Attack
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Attack'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    // Check for no target
+                    if (Convert.ToInt32(dataReader.GetValue(8)) != 0) // 0 refers to no target
+                    {
+                        Attack(Convert.ToInt32(dataReader.GetValue(0)), Convert.ToInt32(dataReader.GetValue(8)));
+                    }
+                }
+                command.Dispose();
+
+                // Charge
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Charge'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Charge(Convert.ToInt32(dataReader.GetValue(0)));
+                }
+                command.Dispose();
+
+                // Overcharge
+                sql = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Overcharge'";
+                command = new SqlCommand(sql, conn);
+                dataReader = command.ExecuteReader();
+                while (dataReader.Read())
+                {
+                    Console.Write($"{Convert.ToString(dataReader.GetValue(1))} is overcharging.  How many HP are used?  ");
+                    int overcharge = Convert.ToInt32(Console.ReadLine());
+                    Overcharge(Convert.ToInt32(dataReader.GetValue(0)), overcharge);
+                }
+                command.Dispose();
+
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
         static void PrintTracker()
         {
             Console.WriteLine(PrintDivider());
@@ -469,7 +570,7 @@ namespace nacs_tracker
                     }
 
                     // Print action
-                    numSpaces = 6;
+                    numSpaces = 10;
                     numChars = Convert.ToString(dataReader.GetValue(10)).Length;
                     output = $"{output}{Convert.ToString(dataReader.GetValue(10))}";
                     for (int i = numChars; i < numSpaces; i++)
