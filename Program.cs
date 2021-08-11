@@ -24,8 +24,8 @@ namespace nacs_tracker
         static string targetActionStr;
         static int targetActionInt;
         static int count;
-        const char emptyHeart = '♡';
-        const char fullHeart = '♥';
+        const char emptyHealthBox = '\u2591';
+        const char fullHealthBox = '\u2588';
 
 
         static void AddCharacter(string name, char position, int hp, int maxHp)
@@ -494,6 +494,8 @@ namespace nacs_tracker
         static void PrintTracker()
         {
             Console.WriteLine(PrintDivider());
+            Console.WriteLine("| ID |        Name        |Pos|       Health       |Chg|  Action  |Tar |");
+            Console.WriteLine(PrintDivider());
 
             try
             {
@@ -507,6 +509,7 @@ namespace nacs_tracker
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
+                    output = "|";
                     // Print ID
                     if (Convert.ToInt32(dataReader1.GetValue(0)) < 10)
                     {
@@ -550,11 +553,11 @@ namespace nacs_tracker
                     int hpCounter;
                     for (hpCounter = 1; hpCounter <= Convert.ToInt32(dataReader1.GetValue(3)); hpCounter++)
                     {
-                        output = $"{output}{fullHeart}";
+                        output = $"{output}{fullHealthBox}";
                     }
                     for (/*Keeping the value from last time*/; hpCounter <= Convert.ToInt32(dataReader1.GetValue(4)); hpCounter++)
                     {
-                        output = $"{output}{emptyHeart}";
+                        output = $"{output}{emptyHealthBox}";
                     }
                     for (/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++)
                     {
@@ -566,11 +569,11 @@ namespace nacs_tracker
                     // Print charge
                     if (Convert.ToInt32(dataReader1.GetValue(5)) < 10)
                     {
-                        output = $"output  {Convert.ToInt32(dataReader1.GetValue(5))}|";
+                        output = $"{output}  {Convert.ToInt32(dataReader1.GetValue(5))}|";
                     }
                     else
                     {
-                        output = $"output {Convert.ToInt32(dataReader1.GetValue(5))}|";
+                        output = $"{output} {Convert.ToInt32(dataReader1.GetValue(5))}|";
                     }
 
                     // Print action
@@ -584,7 +587,19 @@ namespace nacs_tracker
                     output = $"{output}|";
 
                     // Print target
-                    if (Convert.ToInt32(dataReader1.GetValue(8)) < 10)
+                    if(dataReader1.IsDBNull(8))
+                    {
+                        output = $"{output}    |";
+                    }
+                    else if (Convert.ToInt32(dataReader1.GetValue(8)) < 10)
+                    {
+                        output = $"{output}   {Convert.ToInt32(dataReader1.GetValue(8))}|";
+                    }
+                    else if (Convert.ToInt32(dataReader1.GetValue(8)) < 100)
+                    {
+                        output = $"{output}  {Convert.ToInt32(dataReader1.GetValue(8))}|";
+                    }
+                    else if (Convert.ToInt32(dataReader1.GetValue(8)) < 1000)
                     {
                         output = $"{output} {Convert.ToInt32(dataReader1.GetValue(8))}|";
                     }
@@ -605,7 +620,7 @@ namespace nacs_tracker
         }
         static void Main(string[] args)
         {
-            // This method currently used for debugging
+            PrintTracker();
         }
     }
 }

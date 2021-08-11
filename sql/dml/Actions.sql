@@ -8,5 +8,6 @@ VALUES ('Boost'),
 ('Overcharge'),
 ('None'),
 ('Cooldown'),
+('CCd'),
 ('Dead'),
 ('NPC');

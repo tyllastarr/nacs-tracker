@@ -7,7 +7,7 @@
     MaxHp INT NOT NULL, 
     Charge INT NOT NULL DEFAULT 0, 
     Defense INT NOT NULL DEFAULT 0, 
-    Action INT NULL, 
+    Action INT NOT NULL DEFAULT 8, -- 8 being the value for "no action"
     Target INT NULL,
 	CONSTRAINT FK_Target_Character FOREIGN KEY (Target) REFERENCES Characters (Id),
     CONSTRAINT FK_Action FOREIGN KEY (Action) REFERENCES Actions (Id)
