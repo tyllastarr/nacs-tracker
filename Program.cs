@@ -24,8 +24,8 @@ namespace nacs_tracker
         static string targetActionStr;
         static int targetActionInt;
         static int count;
-        const char emptyHeart = '♡'; // TODO: Find a way for the symbol to display
-        const char fullHeart = '♥';
+        const char emptyHealthBox = '\u2591';
+        const char fullHealthBox = '\u2588';
 
 
         static void AddCharacter(string name, char position, int hp, int maxHp)
@@ -553,11 +553,11 @@ namespace nacs_tracker
                     int hpCounter;
                     for (hpCounter = 1; hpCounter <= Convert.ToInt32(dataReader1.GetValue(3)); hpCounter++)
                     {
-                        output = $"{output}{fullHeart}";
+                        output = $"{output}{fullHealthBox}";
                     }
                     for (/*Keeping the value from last time*/; hpCounter <= Convert.ToInt32(dataReader1.GetValue(4)); hpCounter++)
                     {
-                        output = $"{output}{emptyHeart}";
+                        output = $"{output}{emptyHealthBox}";
                     }
                     for (/*Keeping the value from last time*/; hpCounter <= 20; hpCounter++)
                     {
