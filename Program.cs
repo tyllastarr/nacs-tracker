@@ -618,6 +618,22 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
+        static void SetTarget(int origin, int target)
+        {
+            try
+            {
+                sql1 = $"UPDATE Characters SET Target = {target} WHERE Id = {origin}";
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                command1.ExecuteNonQuery();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
         static void Main(string[] args)
         {
             PrintTracker();
