@@ -634,6 +634,99 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
+        static int AskForActions(string characterName)
+        {
+            int actionNumber;
+            List<int> actionIds = new List<int>();
+
+            try
+            {
+                Console.WriteLine();
+                Console.WriteLine("CHOOSE AN ACTION");
+                Console.WriteLine("━━━━━━━━━━━━━━━━");
+                sql1 = "SELECT Id, Action FROM Actions WHERE IsPlayerAction = 1";
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                dataReader1 = command1.ExecuteReader();
+                while (dataReader1.Read())
+                {
+                    actionIds.Add(Convert.ToInt32(dataReader1.GetValue(0)));
+                    Console.WriteLine($"{Convert.ToInt32(dataReader1.GetValue(0))}) {Convert.ToString(dataReader1.GetValue(1))}");
+                }
+                dataReader1.Close();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            Console.Write($"Type the number of the action you want {characterName} to perform: ");
+            actionNumber = Convert.ToInt32(Console.ReadLine());
+            while (!actionIds.Contains(actionNumber))
+            {
+                Console.WriteLine("Error: Not a valid action.");
+                Console.Write($"Type the number of the action you want {characterName} to perform: ");
+                actionNumber = Convert.ToInt32(Console.ReadLine());
+            }
+            return actionNumber;
+        }
+        static void ChangePlayerAction()
+        {
+            List<int> playerIds = new List<int>();
+            int characterNumber;
+            string characterName = "";
+            int actionNumber;
+            try
+            {
+                Console.WriteLine();
+                Console.WriteLine("CHOOSE A CHARACTER");
+                Console.WriteLine("━━━━━━━━━━━━━━━━━━");
+                sql2 = "SELECT Id, Name FROM Characters WHERE Action < 11";
+                conn2.Open();
+                command2 = new SqlCommand(sql2, conn2);
+                dataReader2 = command2.ExecuteReader();
+                while(dataReader2.Read())
+                {
+                    playerIds.Add(Convert.ToInt32(dataReader2.GetValue(0)));
+                    Console.WriteLine($"{Convert.ToInt32(dataReader2.GetValue(0))}) {Convert.ToString(dataReader2.GetValue(1))}");
+                }
+                dataReader2.Close();
+                command2.Dispose();
+
+                Console.Write("Type the number of the character you want to perform an action: ");
+                characterNumber = Convert.ToInt32(Console.ReadLine());
+                while(!playerIds.Contains(characterNumber))
+                {
+                    Console.WriteLine("Error: Not a valid character.");
+                    Console.Write("Type the number of the character you want to perform an action: ");
+                    characterNumber = Convert.ToInt32(Console.ReadLine());
+                }
+
+                sql2 = $"SELECT Name FROM Characters WHERE Id = {characterNumber}";
+                command2 = new SqlCommand(sql2, conn2);
+                dataReader2 = command2.ExecuteReader();
+                while(dataReader2.Read())
+                {
+                    characterName = Convert.ToString(dataReader2.GetValue(0));
+                }
+                dataReader2.Close();
+                command2.Dispose();
+
+                actionNumber = AskForActions(characterName);
+
+                sql2 = $"UPDATE Characters SET Action = {actionNumber} WHERE Id = {characterNumber}";
+                command2 = new SqlCommand(sql2, conn2);
+                command2.ExecuteNonQuery();
+                command2.Dispose();
+                conn2.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
         static void Main(string[] args)
         {
             PrintTracker();
