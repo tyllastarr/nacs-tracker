@@ -364,6 +364,112 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
+        static void DamageTarget(int target, int damageAmount)
+        {
+            try
+            {
+                sql1 = $"SELECT Hp FROM Characters WHERE Id = {target}";
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                dataReader1 = command1.ExecuteReader();
+                while(dataReader1.Read())
+                {
+                    if(Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount <= 0)
+                    {
+                        sql2 = $"UPDATE Characters SET Hp = 0, Action = 11 WHERE Id = {target}"; // 11 is the code for dead in the action field
+                        conn2.Open();
+                        command2 = new SqlCommand(sql2, conn2);
+                        command2.ExecuteNonQuery();
+                        command2.Dispose();
+                        conn2.Close();
+                    } else
+                    {
+                        int finalHp = Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount;
+                        sql2 = $"UPDATE Characters SET Hp = {finalHp} WHERE Id = {target}";
+                        conn2.Open();
+                        command2 = new SqlCommand(sql2, conn2);
+                        command2.ExecuteNonQuery();
+                        command2.Dispose();
+                        conn2.Close();
+                    }
+                }
+                dataReader1.Close();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void DamageTarget(int target)
+        {
+            DamageTarget(target, 1); // Use 1 as a default
+        }
+        static void HealTarget(int target, int healAmount)
+        {
+            DamageTarget(target, healAmount * -1); // Heals can be seen as negative damage
+        }
+        static void HealTarget(int target)
+        {
+            DamageTarget(target, -1); // Use 1 healing as a default, so -1 damage
+        }
+        static void CCTarget(int target)
+        {
+            try
+            {
+                sql1 = $"UPDATE Characters SET Action = 10 WHERE Id = {target}"; // 10 is the code for CCd
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                command1.ExecuteNonQuery();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void UnCCTarget(int target)
+        {
+            try
+            {
+                bool ccd = false; // TRUE if character is currently CCd, FALSE otherwise.  Default to FALSE.
+                sql1 = $"SELECT Action FROM Characters WHERE Id = {target}";
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                dataReader1 = command1.ExecuteReader();
+                while(dataReader1.Read())
+                {
+                    if(Convert.ToInt32(dataReader1.GetValue(0)) != 10)
+                    {
+                        ccd = false;
+                    } else
+                    {
+                        ccd = true;
+                    }
+                }
+                dataReader1.Close();
+                command1.Dispose();
+                conn1.Close();
+
+                if(!ccd) // If not CCd then don't do anything
+                {
+                    return;
+                }
+
+                sql1 = $"UPDATE Characters SET Action = 10 WHERE Id = {target}";
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                command1.ExecuteNonQuery();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
         static void CatchDead()
         {
             try
