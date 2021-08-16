@@ -70,23 +70,23 @@ namespace nacs_tracker
 
             try
             {
-                sql1 = $"SELECT * FROM Characters WHERE Id = {origin}";
+                sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    power = Convert.ToInt32(dataReader1.GetValue(5)) + 1;
+                    power = Convert.ToInt32(dataReader1.GetValue(0)) + 1;
                 }
                 dataReader1.Close();
                 command1.Dispose();
 
-                sql1 = $"SELECT * FROM Characters WHERE Id = {target}";
+                sql1 = $"SELECT Hp FROM Characters WHERE Id = {target}";
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    targetHp = Convert.ToInt32(dataReader1.GetValue(3)) - power;
+                    targetHp = Convert.ToInt32(dataReader1.GetValue(0)) - power;
                     if (targetHp < 0)
                     {
                         targetHp = 0;
@@ -116,14 +116,14 @@ namespace nacs_tracker
         {
             try
             {
-                sql1 = $"SELECT * FROM Characters WHERE id = {origin}";
+                sql1 = $"SELECT Charge, Defense FROM Characters WHERE id = {origin}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    power = Convert.ToInt32(dataReader1.GetValue(5)) + 1;
-                    targetDef = Convert.ToInt32(dataReader1.GetValue(6)) + power;
+                    power = Convert.ToInt32(dataReader1.GetValue(0)) + 1;
+                    targetDef = Convert.ToInt32(dataReader1.GetValue(1)) + power;
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -143,23 +143,23 @@ namespace nacs_tracker
         {
             try
             {
-                sql1 = $"SELECT * FROM Characters WHERE Id = {origin}";
+                sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    power = Convert.ToInt32(dataReader1.GetValue(5)) + 1;
+                    power = Convert.ToInt32(dataReader1.GetValue(0)) + 1;
                 }
                 dataReader1.Close();
                 command1.Dispose();
 
-                sql1 = $"SELECT * FROM Characters WHERE Id = {target}";
+                sql1 = $"SELECT Hp FROM Characters WHERE Id = {target}";
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    targetHp = Convert.ToInt32(dataReader1.GetValue(3)) + power;
+                    targetHp = Convert.ToInt32(dataReader1.GetValue(0)) + power;
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -184,14 +184,14 @@ namespace nacs_tracker
         {
             try
             {
-                sql1 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
+                sql1 = $"SELECT Actions.Action, Characters.Charge FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    targetActionStr = Convert.ToString(dataReader1.GetValue(10));
-                    targetChg = Convert.ToInt32(dataReader1.GetValue(5));
+                    targetActionStr = Convert.ToString(dataReader1.GetValue(0));
+                    targetChg = Convert.ToInt32(dataReader1.GetValue(1));
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -202,12 +202,12 @@ namespace nacs_tracker
                     return;
                 }
 
-                sql1 = $"SELECT * FROM Characters WHERE Id = {origin}";
+                sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    power = 1 + Convert.ToInt32(dataReader1.GetValue(5)) + 1;
+                    power = 1 + Convert.ToInt32(dataReader1.GetValue(0)) + 1;
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -234,14 +234,14 @@ namespace nacs_tracker
         {
             try
             {
-                sql1 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
+                sql1 = $"SELECT Actions.Action, Characters.Charge FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    targetActionStr = Convert.ToString(dataReader1.GetValue(10));
-                    power = Convert.ToInt32(dataReader1.GetValue(5));
+                    targetActionStr = Convert.ToString(dataReader1.GetValue(0));
+                    power = Convert.ToInt32(dataReader1.GetValue(1));
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -254,7 +254,7 @@ namespace nacs_tracker
 
                 if (power <= 0)
                 {
-                    sql1 = $"SELECT * FROM Actions WHERE Action = 'Cooldown'";
+                    sql1 = $"SELECT Id FROM Actions WHERE Action = 'Cooldown'";
                     command1 = new SqlCommand(sql1, conn1);
                     dataReader1 = command1.ExecuteReader();
                     while (dataReader1.Read())
@@ -269,7 +269,7 @@ namespace nacs_tracker
                     command1.ExecuteNonQuery();
                     command1.Dispose();
 
-                    sql1 = $"SELECT * FROM Actions WHERE Action = 'None'";
+                    sql1 = $"SELECT Id FROM Actions WHERE Action = 'None'";
                     command1 = new SqlCommand(sql1, conn1);
                     dataReader1 = command1.ExecuteReader();
                     while (dataReader1.Read())
@@ -286,7 +286,7 @@ namespace nacs_tracker
                 }
                 else
                 {
-                    sql1 = $"SELECT * FROM Actions WHERE Action = 'None'";
+                    sql1 = $"SELECT Id FROM Actions WHERE Action = 'None'";
                     command1 = new SqlCommand(sql1, conn1);
                     dataReader1 = command1.ExecuteReader();
                     while (dataReader1.Read())
@@ -313,13 +313,13 @@ namespace nacs_tracker
         {
             try
             {
-                sql1 = $"SELECT * FROM Characters WHERE Id = {origin}";
+                sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    power = Convert.ToInt32(dataReader1.GetValue(5)) + 1;
+                    power = Convert.ToInt32(dataReader1.GetValue(0)) + 1;
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -341,14 +341,14 @@ namespace nacs_tracker
                         origin.Damage(amount);*/
             try
             {
-                sql1 = $"SELECT * FROM Characters WHERE Id = {origin}";
+                sql1 = $"SELECT Charge, Hp FROM Characters WHERE Id = {origin}";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
-                    power = Convert.ToInt32(dataReader1.GetValue(5)) + amount + 1;
-                    targetHp = Convert.ToInt32(dataReader1.GetValue(3)) - amount;
+                    power = Convert.ToInt32(dataReader1.GetValue(0)) + amount + 1;
+                    targetHp = Convert.ToInt32(dataReader1.GetValue(1)) - amount;
                 }
                 dataReader1.Close();
                 command1.Dispose();
@@ -474,7 +474,7 @@ namespace nacs_tracker
         {
             try
             {
-                sql1 = $"SELECT * FROM Actions WHERE Action = 'Dead'";
+                sql1 = $"SELECT Id FROM Actions WHERE Action = 'Dead'";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
@@ -503,49 +503,49 @@ namespace nacs_tracker
                 conn2.Open();
 
                 // Boost
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Boost'";
+                sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Boost'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
                     // Check for no target
-                    if(Convert.ToInt32(dataReader2.GetValue(8)) != 0) // 0 refers to no target
+                    if(Convert.ToInt32(dataReader2.GetValue(0)) != 0) // 0 refers to no target
                     {
-                        Boost(Convert.ToInt32(dataReader2.GetValue(0)), Convert.ToInt32(dataReader2.GetValue(8)));
+                        Boost(Convert.ToInt32(dataReader2.GetValue(1)), Convert.ToInt32(dataReader2.GetValue(0)));
                     }
                 }
                 command2.Dispose();
 
                 // Revive
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Revive'";
+                sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Revive'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
                     // Check for no target
-                    if (Convert.ToInt32(dataReader2.GetValue(8)) != 0) // 0 refers to no target
+                    if (Convert.ToInt32(dataReader2.GetValue(0)) != 0) // 0 refers to no target
                     {
-                        Revive(Convert.ToInt32(dataReader2.GetValue(0)), Convert.ToInt32(dataReader2.GetValue(8)));
+                        Revive(Convert.ToInt32(dataReader2.GetValue(1)), Convert.ToInt32(dataReader2.GetValue(0)));
                     }
                 }
                 command2.Dispose();
 
                 // Heal
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Heal'";
+                sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Heal'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
                     // Check for no target
-                    if (Convert.ToInt32(dataReader2.GetValue(8)) != 0) // 0 refers to no target
+                    if (Convert.ToInt32(dataReader2.GetValue(0)) != 0) // 0 refers to no target
                     {
-                        Heal(Convert.ToInt32(dataReader2.GetValue(0)), Convert.ToInt32(dataReader2.GetValue(8)));
+                        Heal(Convert.ToInt32(dataReader2.GetValue(1)), Convert.ToInt32(dataReader2.GetValue(0)));
                     }
                 }
                 command2.Dispose();
 
                 // Defend
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Defend'";
+                sql2 = $"SELECT Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Defend'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
@@ -555,21 +555,21 @@ namespace nacs_tracker
                 command2.Dispose();
 
                 // Attack
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Attack'";
+                sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Attack'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
                     // Check for no target
-                    if (Convert.ToInt32(dataReader2.GetValue(8)) != 0) // 0 refers to no target
+                    if (Convert.ToInt32(dataReader2.GetValue(0)) != 0) // 0 refers to no target
                     {
-                        Attack(Convert.ToInt32(dataReader2.GetValue(0)), Convert.ToInt32(dataReader2.GetValue(8)));
+                        Attack(Convert.ToInt32(dataReader2.GetValue(1)), Convert.ToInt32(dataReader2.GetValue(0)));
                     }
                 }
                 command2.Dispose();
 
                 // Charge
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Charge'";
+                sql2 = $"SELECT Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Charge'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
@@ -579,14 +579,14 @@ namespace nacs_tracker
                 command2.Dispose();
 
                 // Overcharge
-                sql2 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Overcharge'";
+                sql2 = $"SELECT Characters.Name, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Overcharge'";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
-                    Console.Write($"{Convert.ToString(dataReader2.GetValue(1))} is overcharging.  How many HP are used?  ");
+                    Console.Write($"{Convert.ToString(dataReader2.GetValue(0))} is overcharging.  How many HP are used?  ");
                     int overcharge = Convert.ToInt32(Console.ReadLine());
-                    Overcharge(Convert.ToInt32(dataReader2.GetValue(0)), overcharge);
+                    Overcharge(Convert.ToInt32(dataReader2.GetValue(1)), overcharge);
                 }
                 command2.Dispose();
 
@@ -609,7 +609,7 @@ namespace nacs_tracker
                 int numChars;
                 int numSpaces;
 
-                sql1 = $"SELECT * FROM Characters JOIN Actions ON Characters.Action = Actions.Id";
+                sql1 = $"SELECT Characters.Id, Characters.Name, Characters.Position, Characters.Hp, Characters.MaxHp, Characters.Charge, Characters.Target, Actions.Action FROM Characters JOIN Actions ON Characters.Action = Actions.Id";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
@@ -684,8 +684,8 @@ namespace nacs_tracker
 
                     // Print action
                     numSpaces = 10;
-                    numChars = Convert.ToString(dataReader1.GetValue(10)).Length;
-                    output = $"{output}{Convert.ToString(dataReader1.GetValue(10))}";
+                    numChars = Convert.ToString(dataReader1.GetValue(7)).Length;
+                    output = $"{output}{Convert.ToString(dataReader1.GetValue(7))}";
                     for (int i = numChars; i < numSpaces; i++)
                     {
                         output = $"{output} ";
@@ -697,21 +697,21 @@ namespace nacs_tracker
                     {
                         output = $"{output}    |";
                     }
-                    else if (Convert.ToInt32(dataReader1.GetValue(8)) < 10)
+                    else if (Convert.ToInt32(dataReader1.GetValue(6)) < 10)
                     {
-                        output = $"{output}   {Convert.ToInt32(dataReader1.GetValue(8))}|";
+                        output = $"{output}   {Convert.ToInt32(dataReader1.GetValue(6))}|";
                     }
-                    else if (Convert.ToInt32(dataReader1.GetValue(8)) < 100)
+                    else if (Convert.ToInt32(dataReader1.GetValue(6)) < 100)
                     {
-                        output = $"{output}  {Convert.ToInt32(dataReader1.GetValue(8))}|";
+                        output = $"{output}  {Convert.ToInt32(dataReader1.GetValue(6))}|";
                     }
-                    else if (Convert.ToInt32(dataReader1.GetValue(8)) < 1000)
+                    else if (Convert.ToInt32(dataReader1.GetValue(6)) < 1000)
                     {
-                        output = $"{output} {Convert.ToInt32(dataReader1.GetValue(8))}|";
+                        output = $"{output} {Convert.ToInt32(dataReader1.GetValue(6))}|";
                     }
                     else
                     {
-                        output = $"{output}{Convert.ToInt32(dataReader1.GetValue(8))}|";
+                        output = $"{output}{Convert.ToInt32(dataReader1.GetValue(6))}|";
                     }
 
                     Console.WriteLine(output);
