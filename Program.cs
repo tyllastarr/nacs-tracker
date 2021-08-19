@@ -28,9 +28,9 @@ namespace nacs_tracker
         const char fullHealthBox = '\u2588';
 
 
-        static void AddCharacter(string name, char position, int hp, int maxHp)
+        static void AddCharacter(string name, char position, int hp)
         {
-            sql1 = $"INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('{name}', '{position}', {hp}, {maxHp})";
+            sql1 = $"INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('{name}', '{position}', {hp}, {hp})";
             try
             {
                 conn1.Open();
@@ -44,9 +44,9 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
-        static void AddCharacter(string name, int hp, int maxHp)
+        static void AddCharacter(string name, int hp)
         {
-            sql1 = $"INSERT INTO Characters(Name, Hp, MaxHp) VALUES('{name}', {hp}, {maxHp})";
+            sql1 = $"INSERT INTO Characters(Name, Hp, MaxHp) VALUES('{name}', {hp}, {hp})";
             try
             {
                 conn1.Open();
@@ -59,6 +59,54 @@ namespace nacs_tracker
             {
                 Console.WriteLine(ex);
             }
+        }
+        static void AddCharacter(string name, char position, int hp, int action)
+        {
+            sql1 = $"INSERT INTO Characters(Name, Position, Hp, MaxHp, Action) VALUES('{name}', '{position}', {hp}, {hp}, {action})";
+            try
+            {
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                command1.ExecuteNonQuery();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void AddCharacter(string name, int hp, int action)
+        {
+            sql1 = $"INSERT INTO Characters(Name, Hp, MaxHp, Action) VALUES('{name}', {hp}, {hp}, {action})";
+            try
+            {
+                conn1.Open();
+                command1 = new SqlCommand(sql1, conn1);
+                command1.ExecuteNonQuery();
+                command1.Dispose();
+                conn1.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        static void AddNPC()
+        {
+            string name;
+            int hp;
+            char position;
+            Console.WriteLine();
+            Console.Write("Please enter the name of the NPC: ");
+            name = Console.ReadLine();
+            Console.WriteLine();
+            Console.Write("Please enter the NPC's position: ");
+            position = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+            Console.Write("Please enter the NPC's max HP: ");
+            hp = Convert.ToInt32(Console.ReadLine()); // New characters always start with full HP
+            AddCharacter(name, position, hp, 12); // 12 is code for an NPC
         }
         static string PrintDivider()
         {
