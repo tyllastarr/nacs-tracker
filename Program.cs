@@ -24,6 +24,7 @@ namespace nacs_tracker
         static string targetActionStr;
         static int targetActionInt;
         static int count;
+        static TrackerStatus status;
         const char emptyHealthBox = '\u2591';
         const char fullHealthBox = '\u2588';
 
@@ -908,7 +909,9 @@ namespace nacs_tracker
             Console.WriteLine("NPC ACTIONS");
             Console.WriteLine("━━━━━━━━━━━");
             Console.WriteLine("C) CC target");
+            Console.WriteLine("U) Un-CC target");
             Console.WriteLine("D) Damage target");
+            Console.WriteLine("H) Heal target");
             Console.WriteLine("N) Add NPC");
             Console.WriteLine("P) Add PC");
             Console.WriteLine("R) Revert to player actions");
@@ -918,11 +921,17 @@ namespace nacs_tracker
             choice = Char.ToUpper(Console.ReadKey().KeyChar);
             Console.WriteLine();
 
-            switch (choice) {
+            switch (choice)
+            {
                 case 'C':
                     Console.Write("Please enter the ID number of the character that you want to CC: ");
                     target = Convert.ToInt32(Console.ReadLine());
                     CCTarget(target);
+                    return TrackerStatus.NPC;
+                case 'U':
+                    Console.Write("Please enter the ID number of the character that you want to un-CC: ");
+                    target = Convert.ToInt32(Console.ReadLine());
+                    UnCCTarget(target);
                     return TrackerStatus.NPC;
                 case 'D':
                     Console.Write("Please enter the ID number of the character that you want to damage: ");
@@ -930,6 +939,13 @@ namespace nacs_tracker
                     Console.Write("How much damage do you want to do? ");
                     damage = Convert.ToInt32(Console.ReadLine());
                     DamageTarget(target, damage);
+                    return TrackerStatus.NPC;
+                case 'H':
+                    Console.Write("Please enter the ID number of the character that you want to heal: ");
+                    target = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("How much damage do you want to heal? ");
+                    damage = Convert.ToInt32(Console.ReadLine());
+                    HealTarget(target, damage);
                     return TrackerStatus.NPC;
                 case 'N':
                     AddNPC();
@@ -950,7 +966,6 @@ namespace nacs_tracker
         static TrackerStatus PCMenu() // TRUE will mean another PC, and FALSE will mean process turn
         {
 
-            int target;
             char choice;
             Console.WriteLine("PC ACTIONS");
             Console.WriteLine("━━━━━━━━━━");
@@ -965,7 +980,7 @@ namespace nacs_tracker
             choice = Char.ToUpper(Console.ReadKey().KeyChar);
             Console.WriteLine();
 
-            switch(choice)
+            switch (choice)
             {
                 case 'A':
                     ChangePlayerAction();
@@ -992,7 +1007,20 @@ namespace nacs_tracker
         }
         static void Main(string[] args)
         {
-            PrintTracker();
+            status = TrackerStatus.PC;
+            do
+            {
+                PrintTracker();
+                switch (status)
+                {
+                    case TrackerStatus.PC:
+                        status = PCMenu();
+                        break;
+                    case TrackerStatus.NPC:
+                        status = NPCMenu();
+                        break;
+                }
+            } while (status != TrackerStatus.Quit);
         }
     }
 }
