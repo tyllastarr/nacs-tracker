@@ -786,8 +786,13 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
-        static void SetTarget(int origin, int target)
+        static void SetTarget()
         {
+            Console.WriteLine();
+            Console.Write("Type the ID number of the character you want to set the target of: ");
+            int origin = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Type the ID number of the target: ");
+            int target = Convert.ToInt32(Console.ReadLine());
             try
             {
                 sql1 = $"UPDATE Characters SET Target = {target} WHERE Id = {origin}";
@@ -966,7 +971,7 @@ namespace nacs_tracker
                     ChangePlayerAction();
                     return TrackerStatus.PC;
                 case 'T':
-                    // TODO: Set target
+                    SetTarget();
                     return TrackerStatus.PC;
                 case 'P':
                     AddPC();
@@ -975,7 +980,7 @@ namespace nacs_tracker
                     AddNPC();
                     return TrackerStatus.PC;
                 case 'R':
-                    // TODO: Parse player actions
+                    PlayerActions();
                     return TrackerStatus.NPC;
                 case 'Q':
                     return TrackerStatus.Quit;
