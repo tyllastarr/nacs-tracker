@@ -108,6 +108,18 @@ namespace nacs_tracker
             hp = Convert.ToInt32(Console.ReadLine()); // New characters always start with full HP
             AddCharacter(name, position, hp, 12); // 12 is code for an NPC
         }
+        static void AddPC()
+        {
+            string name;
+            int hp;
+            Console.WriteLine();
+            Console.Write("Please enter the name of the PC: ");
+            name = Console.ReadLine();
+            Console.WriteLine();
+            Console.Write("Please enter the PC's max HP: ");
+            hp = Convert.ToInt32(Console.ReadLine()); // New characters always start with full HP
+            AddCharacter(name, hp, 8); // 8 is code for np action
+        }
         static string PrintDivider()
         {
             string divider = "+----+--------------------+---+--------------------+---+----------+----+";
