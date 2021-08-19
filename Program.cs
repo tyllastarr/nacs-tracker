@@ -904,6 +904,8 @@ namespace nacs_tracker
             Console.WriteLine("━━━━━━━━━━━");
             Console.WriteLine("C) CC target");
             Console.WriteLine("D) Damage target");
+            Console.WriteLine("N) Add NPC");
+            Console.WriteLine("P) Add PC");
             Console.WriteLine("R) Revert to player actions");
             Console.WriteLine();
             Console.Write("Press the letter key for your choice: ");
@@ -923,12 +925,58 @@ namespace nacs_tracker
                     damage = Convert.ToInt32(Console.ReadLine());
                     DamageTarget(target, damage);
                     return true;
+                case 'N':
+                    AddNPC();
+                    return true;
+                case 'P':
+                    AddPC();
+                    return true;
                 case 'R':
                     return false;
                 default:
                     Console.WriteLine("Error: unknown action.");
                     Console.WriteLine();
                     return NPCMenu(); // Run through the menu method again if input is invalid
+            }
+        }
+        static bool PCMenu() // TRUE will mean another PC, and FALSE will mean process turn
+        {
+
+            int target;
+            char choice;
+            Console.WriteLine("PC ACTIONS");
+            Console.WriteLine("━━━━━━━━━━");
+            Console.WriteLine("A) Set action");
+            Console.WriteLine("T) Set target");
+            Console.WriteLine("P) Add PC");
+            Console.WriteLine("N) Add NPC");
+            Console.WriteLine("R) Run player actions");
+            Console.WriteLine();
+            Console.Write("Press the letter key for your choice: ");
+            choice = Char.ToUpper(Console.ReadKey().KeyChar);
+            Console.WriteLine();
+
+            switch(choice)
+            {
+                case 'A':
+                    ChangePlayerAction();
+                    return true;
+                case 'T':
+                    // TODO: Set target
+                    return true;
+                case 'P':
+                    AddPC();
+                    return true;
+                case 'N':
+                    AddNPC();
+                    return true;
+                case 'R':
+                    // TODO: Parse player actions
+                    return false;
+                default:
+                    Console.WriteLine("Error: unknown action.");
+                    Console.WriteLine();
+                    return PCMenu(); // Run through the menu method again if input is invalid
             }
         }
         static void Main(string[] args)
