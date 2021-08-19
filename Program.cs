@@ -432,9 +432,9 @@ namespace nacs_tracker
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
-                while(dataReader1.Read())
+                while (dataReader1.Read())
                 {
-                    if(Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount <= 0)
+                    if (Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount <= 0)
                     {
                         sql2 = $"UPDATE Characters SET Hp = 0, Action = 11 WHERE Id = {target}"; // 11 is the code for dead in the action field
                         conn2.Open();
@@ -442,7 +442,8 @@ namespace nacs_tracker
                         command2.ExecuteNonQuery();
                         command2.Dispose();
                         conn2.Close();
-                    } else
+                    }
+                    else
                     {
                         int finalHp = Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount;
                         sql2 = $"UPDATE Characters SET Hp = {finalHp} WHERE Id = {target}";
@@ -499,12 +500,13 @@ namespace nacs_tracker
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
                 dataReader1 = command1.ExecuteReader();
-                while(dataReader1.Read())
+                while (dataReader1.Read())
                 {
-                    if(Convert.ToInt32(dataReader1.GetValue(0)) != 10)
+                    if (Convert.ToInt32(dataReader1.GetValue(0)) != 10)
                     {
                         ccd = false;
-                    } else
+                    }
+                    else
                     {
                         ccd = true;
                     }
@@ -513,7 +515,7 @@ namespace nacs_tracker
                 command1.Dispose();
                 conn1.Close();
 
-                if(!ccd) // If not CCd then don't do anything
+                if (!ccd) // If not CCd then don't do anything
                 {
                     return;
                 }
@@ -569,7 +571,7 @@ namespace nacs_tracker
                 while (dataReader2.Read())
                 {
                     // Check for no target
-                    if(Convert.ToInt32(dataReader2.GetValue(0)) != 0) // 0 refers to no target
+                    if (Convert.ToInt32(dataReader2.GetValue(0)) != 0) // 0 refers to no target
                     {
                         Boost(Convert.ToInt32(dataReader2.GetValue(1)), Convert.ToInt32(dataReader2.GetValue(0)));
                     }
@@ -753,7 +755,7 @@ namespace nacs_tracker
                     output = $"{output}|";
 
                     // Print target
-                    if(dataReader1.IsDBNull(8))
+                    if (dataReader1.IsDBNull(8))
                     {
                         output = $"{output}    |";
                     }
@@ -853,7 +855,7 @@ namespace nacs_tracker
                 conn2.Open();
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
-                while(dataReader2.Read())
+                while (dataReader2.Read())
                 {
                     playerIds.Add(Convert.ToInt32(dataReader2.GetValue(0)));
                     Console.WriteLine($"{Convert.ToInt32(dataReader2.GetValue(0))}) {Convert.ToString(dataReader2.GetValue(1))}");
@@ -863,7 +865,7 @@ namespace nacs_tracker
 
                 Console.Write("Type the number of the character you want to perform an action: ");
                 characterNumber = Convert.ToInt32(Console.ReadLine());
-                while(!playerIds.Contains(characterNumber))
+                while (!playerIds.Contains(characterNumber))
                 {
                     Console.WriteLine("Error: Not a valid character.");
                     Console.Write("Type the number of the character you want to perform an action: ");
@@ -873,7 +875,7 @@ namespace nacs_tracker
                 sql2 = $"SELECT Name FROM Characters WHERE Id = {characterNumber}";
                 command2 = new SqlCommand(sql2, conn2);
                 dataReader2 = command2.ExecuteReader();
-                while(dataReader2.Read())
+                while (dataReader2.Read())
                 {
                     characterName = Convert.ToString(dataReader2.GetValue(0));
                 }
