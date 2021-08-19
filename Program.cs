@@ -102,7 +102,7 @@ namespace nacs_tracker
             name = Console.ReadLine();
             Console.WriteLine();
             Console.Write("Please enter the NPC's position: ");
-            position = Console.ReadKey().KeyChar;
+            position = Char.ToUpper(Console.ReadKey().KeyChar);
             Console.WriteLine();
             Console.Write("Please enter the NPC's max HP: ");
             hp = Convert.ToInt32(Console.ReadLine()); // New characters always start with full HP
@@ -786,8 +786,13 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
-        static void SetTarget(int origin, int target)
+        static void SetTarget()
         {
+            Console.WriteLine();
+            Console.Write("Type the ID number of the character you want to set the target of: ");
+            int origin = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Type the ID number of the target: ");
+            int target = Convert.ToInt32(Console.ReadLine());
             try
             {
                 sql1 = $"UPDATE Characters SET Target = {target} WHERE Id = {origin}";
@@ -893,6 +898,96 @@ namespace nacs_tracker
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+        static TrackerStatus NPCMenu()
+        {
+            int target;
+            int damage;
+            char choice;
+            Console.WriteLine("NPC ACTIONS");
+            Console.WriteLine("━━━━━━━━━━━");
+            Console.WriteLine("C) CC target");
+            Console.WriteLine("D) Damage target");
+            Console.WriteLine("N) Add NPC");
+            Console.WriteLine("P) Add PC");
+            Console.WriteLine("R) Revert to player actions");
+            Console.WriteLine("Q) Quit tracker");
+            Console.WriteLine();
+            Console.Write("Press the letter key for your choice: ");
+            choice = Char.ToUpper(Console.ReadKey().KeyChar);
+            Console.WriteLine();
+
+            switch (choice) {
+                case 'C':
+                    Console.Write("Please enter the ID number of the character that you want to CC: ");
+                    target = Convert.ToInt32(Console.ReadLine());
+                    CCTarget(target);
+                    return TrackerStatus.NPC;
+                case 'D':
+                    Console.Write("Please enter the ID number of the character that you want to damage: ");
+                    target = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("How much damage do you want to do? ");
+                    damage = Convert.ToInt32(Console.ReadLine());
+                    DamageTarget(target, damage);
+                    return TrackerStatus.NPC;
+                case 'N':
+                    AddNPC();
+                    return TrackerStatus.NPC;
+                case 'P':
+                    AddPC();
+                    return TrackerStatus.NPC;
+                case 'R':
+                    return TrackerStatus.PC;
+                case 'Q':
+                    return TrackerStatus.Quit;
+                default:
+                    Console.WriteLine("Error: unknown action.");
+                    Console.WriteLine();
+                    return NPCMenu(); // Run through the menu method again if input is invalid
+            }
+        }
+        static TrackerStatus PCMenu() // TRUE will mean another PC, and FALSE will mean process turn
+        {
+
+            int target;
+            char choice;
+            Console.WriteLine("PC ACTIONS");
+            Console.WriteLine("━━━━━━━━━━");
+            Console.WriteLine("A) Set action");
+            Console.WriteLine("T) Set target");
+            Console.WriteLine("P) Add PC");
+            Console.WriteLine("N) Add NPC");
+            Console.WriteLine("R) Run player actions");
+            Console.WriteLine("Q) Quit tracker");
+            Console.WriteLine();
+            Console.Write("Press the letter key for your choice: ");
+            choice = Char.ToUpper(Console.ReadKey().KeyChar);
+            Console.WriteLine();
+
+            switch(choice)
+            {
+                case 'A':
+                    ChangePlayerAction();
+                    return TrackerStatus.PC;
+                case 'T':
+                    SetTarget();
+                    return TrackerStatus.PC;
+                case 'P':
+                    AddPC();
+                    return TrackerStatus.PC;
+                case 'N':
+                    AddNPC();
+                    return TrackerStatus.PC;
+                case 'R':
+                    PlayerActions();
+                    return TrackerStatus.NPC;
+                case 'Q':
+                    return TrackerStatus.Quit;
+                default:
+                    Console.WriteLine("Error: unknown action.");
+                    Console.WriteLine();
+                    return PCMenu(); // Run through the menu method again if input is invalid
             }
         }
         static void Main(string[] args)
