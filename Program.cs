@@ -102,7 +102,7 @@ namespace nacs_tracker
             name = Console.ReadLine();
             Console.WriteLine();
             Console.Write("Please enter the NPC's position: ");
-            position = Console.ReadKey().KeyChar;
+            position = Char.ToUpper(Console.ReadKey().KeyChar);
             Console.WriteLine();
             Console.Write("Please enter the NPC's max HP: ");
             hp = Convert.ToInt32(Console.ReadLine()); // New characters always start with full HP
@@ -893,6 +893,42 @@ namespace nacs_tracker
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+        static bool NPCMenu() // TRUE will mean another NPC, and FALSE will mean revert to PC
+        {
+            int target;
+            int damage;
+            char choice;
+            Console.WriteLine("NPC ACTIONS");
+            Console.WriteLine("━━━━━━━━━━━");
+            Console.WriteLine("C) CC target");
+            Console.WriteLine("D) Damage target");
+            Console.WriteLine("R) Revert to player actions");
+            Console.WriteLine();
+            Console.Write("Press the letter key for your choice: ");
+            choice = Char.ToUpper(Console.ReadKey().KeyChar);
+            Console.WriteLine();
+
+            switch (choice) {
+                case 'C':
+                    Console.Write("Please enter the ID number of the character that you want to CC: ");
+                    target = Convert.ToInt32(Console.ReadLine());
+                    CCTarget(target);
+                    return true;
+                case 'D':
+                    Console.Write("Please enter the ID number of the character that you want to damage: ");
+                    target = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("How much damage do you want to do? ");
+                    damage = Convert.ToInt32(Console.ReadLine());
+                    DamageTarget(target, damage);
+                    return true;
+                case 'R':
+                    return false;
+                default:
+                    Console.WriteLine("Error: unknown action.");
+                    Console.WriteLine();
+                    return NPCMenu(); // Run through the menu method again if input is invalid
             }
         }
         static void Main(string[] args)
