@@ -756,7 +756,7 @@ namespace nacs_tracker
                     output = $"{output}|";
 
                     // Print target
-                    if (dataReader1.IsDBNull(8))
+                    if (dataReader1.IsDBNull(6))
                     {
                         output = $"{output}    |";
                     }
@@ -817,7 +817,7 @@ namespace nacs_tracker
             {
                 Console.WriteLine();
                 Console.WriteLine("CHOOSE AN ACTION");
-                Console.WriteLine("━━━━━━━━━━━━━━━━");
+                Console.WriteLine("────────────────");
                 sql1 = "SELECT Id, Action FROM Actions WHERE IsPlayerAction = 1";
                 conn1.Open();
                 command1 = new SqlCommand(sql1, conn1);
@@ -856,7 +856,7 @@ namespace nacs_tracker
             {
                 Console.WriteLine();
                 Console.WriteLine("CHOOSE A CHARACTER");
-                Console.WriteLine("━━━━━━━━━━━━━━━━━━");
+                Console.WriteLine("──────────────────");
                 sql2 = "SELECT Id, Name FROM Characters WHERE Action < 11";
                 conn2.Open();
                 command2 = new SqlCommand(sql2, conn2);
@@ -906,8 +906,9 @@ namespace nacs_tracker
             int target;
             int damage;
             char choice;
+            Console.WriteLine();
             Console.WriteLine("NPC ACTIONS");
-            Console.WriteLine("━━━━━━━━━━━");
+            Console.WriteLine("───────────");
             Console.WriteLine("C) CC target");
             Console.WriteLine("U) Un-CC target");
             Console.WriteLine("D) Damage target");
@@ -967,8 +968,9 @@ namespace nacs_tracker
         {
 
             char choice;
+            Console.WriteLine();
             Console.WriteLine("PC ACTIONS");
-            Console.WriteLine("━━━━━━━━━━");
+            Console.WriteLine("──────────");
             Console.WriteLine("A) Set action");
             Console.WriteLine("T) Set target");
             Console.WriteLine("P) Add PC");
