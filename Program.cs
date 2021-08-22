@@ -6,8 +6,6 @@ namespace nacs_tracker
 {
     class Program
     {
-        static int nameLength;
-        static int healthLength;
         static string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         static SqlConnection conn = new SqlConnection(connectionString);
         static SqlCommand command1;
@@ -22,7 +20,6 @@ namespace nacs_tracker
         static int targetChg;
         static string targetActionStr;
         static int targetActionInt;
-        static int count;
         static TrackerStatus status;
         const char emptyHealthBox = '\u2591';
         const char fullHealthBox = '\u2588';
