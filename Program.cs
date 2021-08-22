@@ -9,8 +9,7 @@ namespace nacs_tracker
         static int nameLength;
         static int healthLength;
         static string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        static SqlConnection conn1 = new SqlConnection(connectionString);
-        static SqlConnection conn2 = new SqlConnection(connectionString);
+        static SqlConnection conn = new SqlConnection(connectionString);
         static SqlCommand command1;
         static SqlCommand command2;
         static SqlDataReader dataReader1;
@@ -28,17 +27,14 @@ namespace nacs_tracker
         const char emptyHealthBox = '\u2591';
         const char fullHealthBox = '\u2588';
 
-
         static void AddCharacter(string name, char position, int hp)
         {
             sql1 = $"INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('{name}', '{position}', {hp}, {hp})";
             try
             {
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -50,11 +46,9 @@ namespace nacs_tracker
             sql1 = $"INSERT INTO Characters(Name, Hp, MaxHp) VALUES('{name}', {hp}, {hp})";
             try
             {
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -66,11 +60,9 @@ namespace nacs_tracker
             sql1 = $"INSERT INTO Characters(Name, Position, Hp, MaxHp, Action) VALUES('{name}', '{position}', {hp}, {hp}, {action})";
             try
             {
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -82,11 +74,9 @@ namespace nacs_tracker
             sql1 = $"INSERT INTO Characters(Name, Hp, MaxHp, Action) VALUES('{name}', {hp}, {hp}, {action})";
             try
             {
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -132,8 +122,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -143,7 +132,7 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"SELECT Hp FROM Characters WHERE Id = {target}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -157,15 +146,14 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Hp = {targetHp} WHERE Id = {target}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Charge = 0 WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -178,8 +166,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Charge, Defense FROM Characters WHERE id = {origin}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -190,10 +177,9 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Defense = {targetDef}, Charge = 0 WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -205,8 +191,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -216,7 +201,7 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"SELECT Hp FROM Characters WHERE Id = {target}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -226,15 +211,14 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Hp = {targetHp} WHERE Id = {target}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Charge = 0 WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -246,8 +230,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Actions.Action, Characters.Charge FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -259,12 +242,11 @@ namespace nacs_tracker
 
                 if (targetActionStr != "Attack" && targetActionStr != "Defend" && targetActionStr != "Heal") // Other actions cannot be boosted
                 {
-                    conn1.Close();
                     return;
                 }
 
                 sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -276,15 +258,14 @@ namespace nacs_tracker
                 targetChg += power;
 
                 sql1 = $"UPDATE Characters SET Charge = {targetChg} WHERE Id = {target}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Charge = 0 WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -296,8 +277,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Actions.Action, Characters.Charge FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -309,14 +289,13 @@ namespace nacs_tracker
 
                 if (targetActionStr != "Dead") // Can't revive someone who isn't dead
                 {
-                    conn1.Close();
                     return;
                 }
 
                 if (power <= 0)
                 {
                     sql1 = $"SELECT Id FROM Actions WHERE Action = 'Cooldown'";
-                    command1 = new SqlCommand(sql1, conn1);
+                    command1 = new SqlCommand(sql1, conn);
                     dataReader1 = command1.ExecuteReader();
                     while (dataReader1.Read())
                     {
@@ -326,12 +305,12 @@ namespace nacs_tracker
                     command1.Dispose();
 
                     sql1 = $"UPDATE Characters SET Action = {targetActionInt} WHERE Id = {origin}";
-                    command1 = new SqlCommand(sql1, conn1);
+                    command1 = new SqlCommand(sql1, conn);
                     command1.ExecuteNonQuery();
                     command1.Dispose();
 
                     sql1 = $"SELECT Id FROM Actions WHERE Action = 'None'";
-                    command1 = new SqlCommand(sql1, conn1);
+                    command1 = new SqlCommand(sql1, conn);
                     dataReader1 = command1.ExecuteReader();
                     while (dataReader1.Read())
                     {
@@ -341,14 +320,14 @@ namespace nacs_tracker
                     command1.Dispose();
 
                     sql1 = $"UPDATE Characters SET Hp = 1, Action = {targetActionInt} WHERE Id = {target}";
-                    command1 = new SqlCommand(sql1, conn1);
+                    command1 = new SqlCommand(sql1, conn);
                     command1.ExecuteNonQuery();
                     command1.Dispose();
                 }
                 else
                 {
                     sql1 = $"SELECT Id FROM Actions WHERE Action = 'None'";
-                    command1 = new SqlCommand(sql1, conn1);
+                    command1 = new SqlCommand(sql1, conn);
                     dataReader1 = command1.ExecuteReader();
                     while (dataReader1.Read())
                     {
@@ -358,12 +337,11 @@ namespace nacs_tracker
                     command1.Dispose();
 
                     sql1 = $"UPDATE Characters SET Hp = {power}, Action = {targetActionInt} WHERE Id = {target}";
-                    command1 = new SqlCommand(sql1, conn1);
+                    command1 = new SqlCommand(sql1, conn);
                     command1.ExecuteNonQuery();
                     command1.Dispose();
                 }
 
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -375,8 +353,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Charge FROM Characters WHERE Id = {origin}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -386,10 +363,9 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Charge = {power} WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -398,13 +374,10 @@ namespace nacs_tracker
         }
         static void Overcharge(int origin, int amount)
         {
-            /*            origin.Charge += amount;
-                        origin.Damage(amount);*/
             try
             {
                 sql1 = $"SELECT Charge, Hp FROM Characters WHERE Id = {origin}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -415,10 +388,9 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Charge = {power}, Hp = {targetHp} WHERE Id = {origin}";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -430,34 +402,28 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Hp FROM Characters WHERE Id = {target}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
                     if (Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount <= 0)
                     {
                         sql2 = $"UPDATE Characters SET Hp = 0, Action = 11 WHERE Id = {target}"; // 11 is the code for dead in the action field
-                        conn2.Open();
-                        command2 = new SqlCommand(sql2, conn2);
+                        command2 = new SqlCommand(sql2, conn);
                         command2.ExecuteNonQuery();
                         command2.Dispose();
-                        conn2.Close();
                     }
                     else
                     {
                         int finalHp = Convert.ToInt32(dataReader1.GetValue(0)) - damageAmount;
                         sql2 = $"UPDATE Characters SET Hp = {finalHp} WHERE Id = {target}";
-                        conn2.Open();
-                        command2 = new SqlCommand(sql2, conn2);
+                        command2 = new SqlCommand(sql2, conn);
                         command2.ExecuteNonQuery();
                         command2.Dispose();
-                        conn2.Close();
                     }
                 }
                 dataReader1.Close();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -481,11 +447,9 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"UPDATE Characters SET Action = 10 WHERE Id = {target}"; // 10 is the code for CCd
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -498,8 +462,7 @@ namespace nacs_tracker
             {
                 bool ccd = false; // TRUE if character is currently CCd, FALSE otherwise.  Default to FALSE.
                 sql1 = $"SELECT Action FROM Characters WHERE Id = {target}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -514,7 +477,6 @@ namespace nacs_tracker
                 }
                 dataReader1.Close();
                 command1.Dispose();
-                conn1.Close();
 
                 if (!ccd) // If not CCd then don't do anything
                 {
@@ -522,11 +484,9 @@ namespace nacs_tracker
                 }
 
                 sql1 = $"UPDATE Characters SET Action = 10 WHERE Id = {target}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -538,8 +498,7 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"SELECT Id FROM Actions WHERE Action = 'Dead'";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -549,10 +508,9 @@ namespace nacs_tracker
                 command1.Dispose();
 
                 sql1 = $"UPDATE Characters SET Action = {targetActionInt}, Hp = 0 WHERE Hp <= 0";
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -563,11 +521,10 @@ namespace nacs_tracker
         {
             try
             {
-                conn2.Open();
 
                 // Boost
                 sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Boost'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -581,7 +538,7 @@ namespace nacs_tracker
 
                 // Revive
                 sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Revive'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -595,7 +552,7 @@ namespace nacs_tracker
 
                 // Heal
                 sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Heal'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -609,7 +566,7 @@ namespace nacs_tracker
 
                 // Defend
                 sql2 = $"SELECT Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Defend'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -619,7 +576,7 @@ namespace nacs_tracker
 
                 // Attack
                 sql2 = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Attack'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -633,7 +590,7 @@ namespace nacs_tracker
 
                 // Charge
                 sql2 = $"SELECT Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Charge'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -643,7 +600,7 @@ namespace nacs_tracker
 
                 // Overcharge
                 sql2 = $"SELECT Characters.Name, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Overcharge'";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -653,7 +610,6 @@ namespace nacs_tracker
                 }
                 command2.Dispose();
 
-                conn2.Close();
             }
             catch (Exception ex)
             {
@@ -673,8 +629,7 @@ namespace nacs_tracker
                 int numSpaces;
 
                 sql1 = $"SELECT Characters.Id, Characters.Name, Characters.Position, Characters.Hp, Characters.MaxHp, Characters.Charge, Characters.Target, Actions.Action FROM Characters JOIN Actions ON Characters.Action = Actions.Id";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -797,11 +752,9 @@ namespace nacs_tracker
             try
             {
                 sql1 = $"UPDATE Characters SET Target = {target} WHERE Id = {origin}";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 command1.ExecuteNonQuery();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -819,8 +772,7 @@ namespace nacs_tracker
                 Console.WriteLine("CHOOSE AN ACTION");
                 Console.WriteLine("────────────────");
                 sql1 = "SELECT Id, Action FROM Actions WHERE IsPlayerAction = 1";
-                conn1.Open();
-                command1 = new SqlCommand(sql1, conn1);
+                command1 = new SqlCommand(sql1, conn);
                 dataReader1 = command1.ExecuteReader();
                 while (dataReader1.Read())
                 {
@@ -829,7 +781,6 @@ namespace nacs_tracker
                 }
                 dataReader1.Close();
                 command1.Dispose();
-                conn1.Close();
             }
             catch (Exception ex)
             {
@@ -858,8 +809,7 @@ namespace nacs_tracker
                 Console.WriteLine("CHOOSE A CHARACTER");
                 Console.WriteLine("──────────────────");
                 sql2 = "SELECT Id, Name FROM Characters WHERE Action < 11";
-                conn2.Open();
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -879,7 +829,7 @@ namespace nacs_tracker
                 }
 
                 sql2 = $"SELECT Name FROM Characters WHERE Id = {characterNumber}";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 dataReader2 = command2.ExecuteReader();
                 while (dataReader2.Read())
                 {
@@ -891,10 +841,9 @@ namespace nacs_tracker
                 actionNumber = AskForActions(characterName);
 
                 sql2 = $"UPDATE Characters SET Action = {actionNumber} WHERE Id = {characterNumber}";
-                command2 = new SqlCommand(sql2, conn2);
+                command2 = new SqlCommand(sql2, conn);
                 command2.ExecuteNonQuery();
                 command2.Dispose();
-                conn2.Close();
             }
             catch (Exception ex)
             {
@@ -1009,6 +958,7 @@ namespace nacs_tracker
         }
         static void Main(string[] args)
         {
+            conn.Open();
             status = TrackerStatus.PC;
             do
             {
@@ -1023,6 +973,7 @@ namespace nacs_tracker
                         break;
                 }
             } while (status != TrackerStatus.Quit);
+            conn.Close();
         }
     }
 }
