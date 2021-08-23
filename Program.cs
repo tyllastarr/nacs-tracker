@@ -17,40 +17,6 @@ namespace nacs_tracker
         const char emptyHealthBox = '\u2591';
         const char fullHealthBox = '\u2588';
 
-        static void AddCharacter(string name, char position, int hp)
-        {
-            string sql = $"INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('{name}', '{position}', {hp}, {hp})";
-            try
-            {
-                SqlConnection conn = new SqlConnection(connectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand(sql, conn);
-                command.ExecuteNonQuery();
-                command.Dispose();
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-        static void AddCharacter(string name, int hp)
-        {
-            string sql = $"INSERT INTO Characters(Name, Hp, MaxHp) VALUES('{name}', {hp}, {hp})";
-            try
-            {
-                SqlConnection conn = new SqlConnection(connectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand(sql, conn);
-                command.ExecuteNonQuery();
-                command.Dispose();
-                conn.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
         static void AddCharacter(string name, char position, int hp, int action)
         {
             string sql = $"INSERT INTO Characters(Name, Position, Hp, MaxHp, Action) VALUES('{name}', '{position}', {hp}, {hp}, {action})";
@@ -462,17 +428,9 @@ namespace nacs_tracker
                 Console.WriteLine(ex);
             }
         }
-        static void DamageTarget(int target)
-        {
-            DamageTarget(target, 1); // Use 1 as a default
-        }
         static void HealTarget(int target, int healAmount)
         {
             DamageTarget(target, healAmount * -1); // Heals can be seen as negative damage
-        }
-        static void HealTarget(int target)
-        {
-            DamageTarget(target, -1); // Use 1 healing as a default, so -1 damage
         }
         static void CCTarget(int target)
         {
@@ -525,33 +483,6 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-        static void CatchDead()
-        {
-            try
-            {
-                string sql = $"SELECT Id FROM Actions WHERE Action = 'Dead'";
-                SqlConnection conn = new SqlConnection(connectionString);
-                conn.Open();
-                SqlCommand command = new SqlCommand(sql, conn);
-                SqlDataReader dataReader = command.ExecuteReader();
-                while (dataReader.Read())
-                {
-                    targetActionInt = Convert.ToInt32(dataReader.GetValue(0));
-                }
-                dataReader.Close();
-                command.Dispose();
-
-                sql = $"UPDATE Characters SET Action = {targetActionInt}, Hp = 0 WHERE Hp <= 0";
-                command = new SqlCommand(sql, conn);
-                command.ExecuteNonQuery();
-                command.Dispose();
-                conn.Close();
             }
             catch (Exception ex)
             {
