@@ -434,17 +434,23 @@ namespace nacs_tracker
                     if (Convert.ToInt32(dataReader.GetValue(0)) - damageAmount <= 0)
                     {
                         string sql2 = $"UPDATE Characters SET Hp = 0, Action = 11 WHERE Id = {target}"; // 11 is the code for dead in the action field
-                        SqlCommand command2 = new SqlCommand(sql2, conn);
+                        SqlConnection conn2 = new SqlConnection(connectionString);
+                        conn2.Open();
+                        SqlCommand command2 = new SqlCommand(sql2, conn2);
                         command2.ExecuteNonQuery();
                         command2.Dispose();
+                        conn2.Close();
                     }
                     else
                     {
                         int finalHp = Convert.ToInt32(dataReader.GetValue(0)) - damageAmount;
                         string sql2 = $"UPDATE Characters SET Hp = {finalHp} WHERE Id = {target}";
-                        SqlCommand command2 = new SqlCommand(sql2, conn);
+                        SqlConnection conn2 = new SqlConnection(connectionString);
+                        conn2.Open();
+                        SqlCommand command2 = new SqlCommand(sql2, conn2);
                         command2.ExecuteNonQuery();
                         command2.Dispose();
+                        conn2.Close();
                     }
                 }
                 dataReader.Close();
@@ -497,6 +503,7 @@ namespace nacs_tracker
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
                 {
+                    int test = Convert.ToInt32(dataReader.GetValue(0));
                     if (Convert.ToInt32(dataReader.GetValue(0)) != 10)
                     {
                         ccd = false;
@@ -514,7 +521,7 @@ namespace nacs_tracker
                     return;
                 }
 
-                sql = $"UPDATE Characters SET Action = 10 WHERE Id = {target}";
+                sql = $"UPDATE Characters SET Action = 8 WHERE Id = {target}";
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
@@ -570,6 +577,7 @@ namespace nacs_tracker
                         Boost(Convert.ToInt32(dataReader.GetValue(1)), Convert.ToInt32(dataReader.GetValue(0)));
                     }
                 }
+                dataReader.Close();
                 command.Dispose();
 
                 // Revive
@@ -584,6 +592,7 @@ namespace nacs_tracker
                         Revive(Convert.ToInt32(dataReader.GetValue(1)), Convert.ToInt32(dataReader.GetValue(0)));
                     }
                 }
+                dataReader.Close();
                 command.Dispose();
 
                 // Heal
@@ -598,6 +607,7 @@ namespace nacs_tracker
                         Heal(Convert.ToInt32(dataReader.GetValue(1)), Convert.ToInt32(dataReader.GetValue(0)));
                     }
                 }
+                dataReader.Close();
                 command.Dispose();
 
                 // Defend
@@ -608,6 +618,7 @@ namespace nacs_tracker
                 {
                     Defend(Convert.ToInt32(dataReader.GetValue(0)));
                 }
+                dataReader.Close();
                 command.Dispose();
 
                 // Attack
@@ -622,6 +633,7 @@ namespace nacs_tracker
                         Attack(Convert.ToInt32(dataReader.GetValue(1)), Convert.ToInt32(dataReader.GetValue(0)));
                     }
                 }
+                dataReader.Close();
                 command.Dispose();
 
                 // Charge
@@ -632,6 +644,7 @@ namespace nacs_tracker
                 {
                     Charge(Convert.ToInt32(dataReader.GetValue(0)));
                 }
+                dataReader.Close();
                 command.Dispose();
 
                 // Overcharge
@@ -644,6 +657,7 @@ namespace nacs_tracker
                     int overcharge = Convert.ToInt32(Console.ReadLine());
                     Overcharge(Convert.ToInt32(dataReader.GetValue(1)), overcharge);
                 }
+                dataReader.Close();
                 command.Dispose();
                 conn.Close();
 
@@ -710,7 +724,14 @@ namespace nacs_tracker
                     output = $"{output}|";
 
                     // Print position
-                    output = $"{output} {Convert.ToString(dataReader.GetValue(2))} |";
+                    if (Convert.ToString(dataReader.GetValue(2)).Equals(""))
+                    {
+                        output = $"{output}   |";
+                    }
+                    else
+                    {
+                        output = $"{output} {Convert.ToString(dataReader.GetValue(2))} |";
+                    }
 
                     // Print HP
                     int hpCounter;
@@ -774,8 +795,10 @@ namespace nacs_tracker
                     Console.WriteLine(output);
                     Console.WriteLine(PrintDivider());
 
-                    conn.Close();
                 }
+                dataReader.Close();
+                command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
