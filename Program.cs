@@ -7,7 +7,6 @@ namespace nacs_tracker
     class Program
     {
         static string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        static SqlConnection conn = new SqlConnection(connectionString);
         static int power;
         static int targetHp;
         static int targetDef;
@@ -23,9 +22,12 @@ namespace nacs_tracker
             string sql = $"INSERT INTO Characters(Name, Position, Hp, MaxHp) VALUES('{name}', '{position}', {hp}, {hp})";
             try
             {
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -37,9 +39,12 @@ namespace nacs_tracker
             string sql = $"INSERT INTO Characters(Name, Hp, MaxHp) VALUES('{name}', {hp}, {hp})";
             try
             {
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -51,9 +56,12 @@ namespace nacs_tracker
             string sql = $"INSERT INTO Characters(Name, Position, Hp, MaxHp, Action) VALUES('{name}', '{position}', {hp}, {hp}, {action})";
             try
             {
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -65,9 +73,12 @@ namespace nacs_tracker
             string sql = $"INSERT INTO Characters(Name, Hp, MaxHp, Action) VALUES('{name}', {hp}, {hp}, {action})";
             try
             {
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -113,6 +124,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Charge FROM Characters WHERE Id = {origin}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -145,6 +158,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -157,6 +171,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Charge, Defense FROM Characters WHERE id = {origin}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -171,6 +187,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -182,6 +199,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Charge FROM Characters WHERE Id = {origin}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -210,6 +229,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -221,6 +241,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Actions.Action, Characters.Charge FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -257,6 +279,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -268,6 +291,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Actions.Action, Characters.Charge FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Characters.Id = {target}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -333,6 +358,7 @@ namespace nacs_tracker
                     command.Dispose();
                 }
 
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -344,6 +370,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Charge FROM Characters WHERE Id = {origin}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -357,6 +385,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -368,6 +397,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Charge, Hp FROM Characters WHERE Id = {origin}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -382,6 +413,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -393,6 +425,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Hp FROM Characters WHERE Id = {target}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -415,6 +449,7 @@ namespace nacs_tracker
                 }
                 dataReader.Close();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -438,9 +473,12 @@ namespace nacs_tracker
             try
             {
                 string sql = $"UPDATE Characters SET Action = 10 WHERE Id = {target}"; // 10 is the code for CCd
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -453,6 +491,8 @@ namespace nacs_tracker
             {
                 bool ccd = false; // TRUE if character is currently CCd, FALSE otherwise.  Default to FALSE.
                 string sql = $"SELECT Action FROM Characters WHERE Id = {target}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -489,6 +529,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"SELECT Id FROM Actions WHERE Action = 'Dead'";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -502,6 +544,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -515,6 +558,8 @@ namespace nacs_tracker
 
                 // Boost
                 string sql = $"SELECT Characters.Target, Characters.Id FROM Characters JOIN Actions ON Characters.Action = Actions.Id WHERE Actions.Action = 'Boost'";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -600,6 +645,7 @@ namespace nacs_tracker
                     Overcharge(Convert.ToInt32(dataReader.GetValue(1)), overcharge);
                 }
                 command.Dispose();
+                conn.Close();
 
             }
             catch (Exception ex)
@@ -620,6 +666,8 @@ namespace nacs_tracker
                 int numSpaces;
 
                 string sql = $"SELECT Characters.Id, Characters.Name, Characters.Position, Characters.Hp, Characters.MaxHp, Characters.Charge, Characters.Target, Actions.Action FROM Characters JOIN Actions ON Characters.Action = Actions.Id";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -726,6 +774,7 @@ namespace nacs_tracker
                     Console.WriteLine(output);
                     Console.WriteLine(PrintDivider());
 
+                    conn.Close();
                 }
             }
             catch (Exception ex)
@@ -743,6 +792,8 @@ namespace nacs_tracker
             try
             {
                 string sql = $"UPDATE Characters SET Target = {target} WHERE Id = {origin}";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
@@ -763,6 +814,8 @@ namespace nacs_tracker
                 Console.WriteLine("CHOOSE AN ACTION");
                 Console.WriteLine("────────────────");
                 string sql = "SELECT Id, Action FROM Actions WHERE IsPlayerAction = 1";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -772,6 +825,7 @@ namespace nacs_tracker
                 }
                 dataReader.Close();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -800,6 +854,8 @@ namespace nacs_tracker
                 Console.WriteLine("CHOOSE A CHARACTER");
                 Console.WriteLine("──────────────────");
                 string sql = "SELECT Id, Name FROM Characters WHERE Action < 11";
+                SqlConnection conn = new SqlConnection(connectionString);
+                conn.Open();
                 SqlCommand command = new SqlCommand(sql, conn);
                 SqlDataReader dataReader = command.ExecuteReader();
                 while (dataReader.Read())
@@ -835,6 +891,7 @@ namespace nacs_tracker
                 command = new SqlCommand(sql, conn);
                 command.ExecuteNonQuery();
                 command.Dispose();
+                conn.Close();
             }
             catch (Exception ex)
             {
@@ -949,7 +1006,6 @@ namespace nacs_tracker
         }
         static void Main(string[] args)
         {
-            conn.Open();
             status = TrackerStatus.PC;
             do
             {
@@ -964,7 +1020,6 @@ namespace nacs_tracker
                         break;
                 }
             } while (status != TrackerStatus.Quit);
-            conn.Close();
         }
     }
 }
