@@ -6,7 +6,7 @@ namespace nacs_tracker
 {
     class Program
     {
-        static string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=P:\\PROJECTS\\NACS-TRACKER\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        static string connectionString = $"Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog={System.Environment.CurrentDirectory}\\..\\..\\..\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         static int power;
         static int targetHp;
         static int targetDef;
